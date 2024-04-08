@@ -3,3 +3,5 @@ pandas
 pyarrow
 ipympl
 matplotlib
+gitpython
+jupyterlab_vim
