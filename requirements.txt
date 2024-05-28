@@ -6,3 +6,4 @@ matplotlib
 gitpython
 jupyterlab_vim
 import_ipynb
+odfpy
