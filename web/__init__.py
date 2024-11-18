@@ -14,7 +14,7 @@ def create_app():
     from web.main import bp as main_bp
 
     app.register_blueprint(main_bp)
-    
+
     app.logger.info(
         "#+-#+-#+-#+-#+-#+-#+-#+-#+-#+- CREATE APP -+#-+#-+#-+#-+#-+#-+#-+#-+#-+#"
     )
