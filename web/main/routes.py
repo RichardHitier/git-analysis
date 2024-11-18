@@ -1,7 +1,7 @@
 from flask import redirect, url_for, render_template
 
 from . import bp
-from ..tools import show_me
+from ..tools.commits import history_df, hours_per_day
 
 
 @bp.route("/")
@@ -11,5 +11,5 @@ def index():
 
 @bp.route("/commits/<project_name>", methods=["GET"])
 def commits(project_name):
-    hits = show_me(project_name)
-    return render_template("commits.html", hits=hits)
+    hits_df = hours_per_day(project_name)
+    return render_template("commits.html", hits=hits_df.to_html())
