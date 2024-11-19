@@ -1,17 +1,24 @@
+import os
 from datetime import datetime, timedelta
 import pandas as pd
 
 import subprocess
 
 projects = {
-    # "calipso": {'git_dirs': ['/home/richard/01DEV/CalipsoProject/calipso-dispatcher-clients/.git',
-    #                          '/home/richard/01DEV/CalipsoProject/calipso-dispatcher-studio-1/.git',
-    #                          '/home/richard/01DEV/CalipsoProject/calipso-net-module/.git',
-    #                          '/home/richard/01DEV/CalipsoProject/.git',
-    #                          ]},
-    "calipso": {'git_dirs': ['/home/richard/01DEV/CalipsoProject/calipso-dispatcher-clients/.git']},
-    "bht": {'git_dirs': ['/home/richard/01DEV/bht2/.git']},
+    "calipso": {
+        'git_dirs': ['/home/richard/01DEV/CalipsoProject/calipso-dispatcher-clients/.git',
+                     '/home/richard/01DEV/CalipsoProject/calipso-dispatcher-studio-1/.git',
+                     '/home/richard/01DEV/CalipsoProject/calipso-net-module/.git',
+                     '/home/richard/01DEV/CalipsoProject/.git',
+                     ],
+        'pom_project': "CALIPSO"},
+    "bht": {
+        'git_dirs': ['/home/richard/01DEV/bht2/.git'],
+        'pom_project': "BHT"},
 }
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+data_dir = os.path.join(dir_path, '../../data')
 
 
 class ProjectError(Exception):
@@ -100,3 +107,30 @@ def hours_per_day(project_name, sooner_date=None, later_date=None):
     df_6["duration_day"] = df_6["duration_day"].apply(lambda x: float(x))
 
     return df_6
+
+
+def pomofocus_to_df(project_name):
+    if project_name not in projects.keys():
+        raise (ProjectError(f"Wrong project name:{project_name}"))
+
+    pom_project = projects[project_name]['pom_project']
+
+    _my_df = pd.read_csv(os.path.join(data_dir, 'pomofocus.csv'), header=0, index_col=0, parse_dates=True)
+    # read_excel("pomodoros.ods", sheet_name="pomodoros",header=1, index_col=0, parse_dates=True)
+    _my_df.fillna(0, inplace=True)
+    # 1- Insert new column 'main_project' keeping first part of project name
+    _my_df.insert(0, 'main_project', "")
+    _my_df['main_project'] = _my_df.project.apply(lambda x: x.split()[0] if x != 0 else "")
+
+    # 2- extract wanted project only and keep only two columns
+    _my_df = _my_df[_my_df['main_project'] == pom_project]
+    _my_df = _my_df.minutes
+
+    # 3- aggregate by day
+    _my_df = _my_df.groupby(level=0).sum()
+    # 4- add missing days reindex
+    day_first = _my_df.index[0]
+    day_last = _my_df.index[-1]
+    day_idx = pd.date_range(start=day_first, end=day_last, freq='D')
+    _my_df = _my_df.reindex(day_idx, fill_value=0.0)
+    return _my_df

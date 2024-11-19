@@ -1,4 +1,4 @@
-from web.tools.histories import history_df, hours_per_day
+from web.tools.histories import history_df, hours_per_day, pomofocus_to_df
 
 
 def test_history_df():
@@ -13,6 +13,13 @@ def test_history_df():
 
 def test_hours_per_day():
     df = hours_per_day("calipso")
+    print(df)
+    # assert len(df) == 58
+    assert True
+
+
+def test_pomofocus_to_df():
+    df = pomofocus_to_df("calipso")
     print(df)
     # assert len(df) == 58
     assert True
