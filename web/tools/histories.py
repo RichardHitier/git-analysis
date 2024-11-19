@@ -36,7 +36,6 @@ def history_df(project_git_dir):
 
     # run git on repo: outputs commits timestamps
     gitlog_args = ['git', f'--git-dir={project_git_dir}', 'log', '--all', '--pretty="%at"']
-    print(" ".join(gitlog_args))
     gitlog_out = subprocess.check_output(gitlog_args, stderr=subprocess.STDOUT)
 
     # transform to timestamp list
@@ -99,7 +98,6 @@ def hours_per_day(project_name, sooner_date=None, later_date=None):
     # df_5 = df_4[["duration_hour", "duration_day"]].truncate(before="2024-09-15")
     # df_5 = df_4[["duration_hour", "duration_day"]]
     df_5["project"] = project_name
-    # print(df_5)
     df_5.index = pd.to_datetime(df_5.index)
     new_index = pd.date_range(start=df_5.index[0], end=df_5.index[-1])
     df_6 = df_5.reindex(new_index)
@@ -128,11 +126,13 @@ def pomofocus_to_df(project_name):
 
     # 3- aggregate by day
     _my_df = _my_df.groupby(level=0).sum()
+
     # 4- add missing days reindex
     day_first = _my_df.index[0]
     day_last = _my_df.index[-1]
     day_idx = pd.date_range(start=day_first, end=day_last, freq='D')
     _my_df = _my_df.reindex(day_idx, fill_value=0.0)
+
     return _my_df
 
 
@@ -144,6 +144,6 @@ def merge_histories(project_name):
     :return:
     """
 
-    pom_df = hours_per_day(project_name)
-    git_df = pomofocus_to_df(project_name)
-    return pd.merge(pom_df, git_df,left_index=True, right_index=True)
+    git_df = hours_per_day(project_name)
+    pom_df = pomofocus_to_df(project_name)
+    return pd.concat([pom_df, git_df], axis=1)

@@ -26,6 +26,9 @@ def test_pomofocus_to_df():
 
 
 def test_merge_histories():
-    df = merge_histories("bht")
+    df = merge_histories("calipso")
+    # print(df.tail())
+    import pandas as pd
+    pd.set_option('display.max_rows', None)
     print(df)
     assert True
