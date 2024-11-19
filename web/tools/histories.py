@@ -134,3 +134,16 @@ def pomofocus_to_df(project_name):
     day_idx = pd.date_range(start=day_first, end=day_last, freq='D')
     _my_df = _my_df.reindex(day_idx, fill_value=0.0)
     return _my_df
+
+
+def merge_histories(project_name):
+    """
+    Merge git history and pomodoro history in one dataframe
+
+    :param project_name:
+    :return:
+    """
+
+    pom_df = hours_per_day(project_name)
+    git_df = pomofocus_to_df(project_name)
+    return pd.merge(pom_df, git_df,left_index=True, right_index=True)
