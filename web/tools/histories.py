@@ -60,21 +60,11 @@ def history_df(project_git_dir):
     return _df
 
 
-def hours_per_day(project_name, sooner_date=None, later_date=None):
+def hours_per_day(project_name):
     """ From The git history dataframe,
         build a new serie with the number of hours worked each day.
         in fact, a delta between last and first commit time for each day.
     """
-
-    if later_date is None:
-        later_date = datetime.now()
-    if sooner_date is None:
-        sooner_date = (later_date - timedelta(days=120))
-
-    if isinstance(later_date, datetime):
-        later_date = later_date.strftime("%Y-%m-%d")
-    if isinstance(sooner_date, datetime):
-        sooner_date = sooner_date.strftime("%Y-%m-%d")
 
     # get the git history, raw
     if project_name not in projects.keys():
@@ -94,9 +84,7 @@ def hours_per_day(project_name, sooner_date=None, later_date=None):
     df_4["duration"] = df_4.apply(lambda x: x["max"] - x["min"], axis=1)
     df_4["duration_hour"] = df_4.apply(lambda x: f"{x['duration'].seconds / 3600:.02f}", axis=1)
     df_4["duration_day"] = df_4.apply(lambda x: f"{x['duration'].seconds / (3600 * 8):.03f}", axis=1)
-    df_5 = df_4[["duration_hour", "duration_day"]].truncate(before=sooner_date, after=later_date)
-    # df_5 = df_4[["duration_hour", "duration_day"]].truncate(before="2024-09-15")
-    # df_5 = df_4[["duration_hour", "duration_day"]]
+    df_5 = df_4[["duration_hour", "duration_day"]]
     df_5["project"] = project_name
     df_5.index = pd.to_datetime(df_5.index)
     new_index = pd.date_range(start=df_5.index[0], end=df_5.index[-1])
@@ -136,14 +124,29 @@ def pomofocus_to_df(project_name):
     return _my_df
 
 
-def merge_histories(project_name):
+def merge_histories(project_name, later_date=None, sooner_date=None):
     """
     Merge git history and pomodoro history in one dataframe
 
+    :param sooner_date:
+    :param later_date:
     :param project_name:
     :return:
     """
+    today = datetime.now()
+
+    if later_date is None:
+        later_date = today
+
+    if sooner_date is None:
+        sooner_date = datetime(later_date.year, 1, 1)
 
     git_df = hours_per_day(project_name)
     pom_df = pomofocus_to_df(project_name)
-    return pd.concat([pom_df, git_df], axis=1)
+    res_df = pd.concat([pom_df, git_df], axis=1)
+
+    res_df = res_df.truncate(before=sooner_date, after=later_date)
+    new_index = pd.date_range(start=sooner_date, end=later_date)
+    res_df = res_df.reindex(new_index)
+    # df_5 = df_4[["duration_hour", "duration_day"]].truncate(before="2024-09-15")
+    return res_df
