@@ -1,4 +1,4 @@
-from web.tools.commits import history_df, hours_per_day
+from web.tools.histories import history_df, hours_per_day
 
 
 def test_history_df():

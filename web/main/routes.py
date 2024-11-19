@@ -1,7 +1,7 @@
 from flask import redirect, url_for, render_template
 
 from . import bp
-from ..tools.commits import history_df, hours_per_day
+from ..tools.histories import history_df, hours_per_day
 
 
 @bp.route("/")
