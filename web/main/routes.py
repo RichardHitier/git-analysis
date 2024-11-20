@@ -2,7 +2,7 @@
 from flask import redirect, url_for, render_template
 
 from . import bp
-from ..tools.histories import history_df, hours_per_day, merge_histories
+from ..tools.histories import repo_to_df, hours_per_day, merge_histories
 
 
 @bp.route("/")

@@ -28,7 +28,7 @@ class ProjectError(Exception):
         super().__init__(self.message)
 
 
-def history_df(project_git_dir):
+def repo_to_df(project_git_dir):
     """ Build a dataframe with one row per commit
         and columns Date, Day, Hour, Nb_Commit
         So we can further run analysis, sums, and plot
@@ -73,7 +73,7 @@ def hours_per_day(project_name):
     df_2 = pd.DataFrame()
 
     for project_git_dir in projects[project_name]['git_dirs']:
-        df_1 = history_df(project_git_dir)
+        df_1 = repo_to_df(project_git_dir)
         df_2 = pd.concat([df_2, df_1])
 
     # day by day, get the min hour, and max hour
