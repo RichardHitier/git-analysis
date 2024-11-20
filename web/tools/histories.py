@@ -75,14 +75,14 @@ def project_to_df(project_name):
     return res_df
 
 
-def hours_per_day(df_2):
+def hours_per_day(project_df):
     """ From The git history dataframe,
-        build a new serie with the number of hours worked each day.
+        build a new series with the number of hours worked each day.
         in fact, a delta between last and first commit time for each day.
     """
 
     # day by day, get the min hour, and max hour
-    df_3 = df_2.groupby("day").date.agg(["min", "max"])
+    df_3 = project_df.groupby("day").date.agg(["min", "max"])
     df_4 = df_3.copy()
 
     # day by day, get the duration, in hour (float) and day part (float)
