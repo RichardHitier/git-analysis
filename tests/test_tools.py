@@ -44,3 +44,13 @@ def test_merge_histories():
     pd.set_option('display.max_rows', None)
     print(df)
     assert True
+
+
+def test_merge_with_no_git():
+    git_df = project_to_df("perso")
+    # df = hours_per_day(git_df)
+    # df = merge_histories("perso")
+    # import pandas as pd
+    # pd.set_option('display.max_rows', None)
+    # print(df)
+    assert True

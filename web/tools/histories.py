@@ -15,6 +15,12 @@ projects = {
     "bht": {
         'git_dirs': ['/home/richard/01DEV/bht2/.git'],
         'pom_project': "BHT"},
+    "pro": {
+        'git_dirs': [],
+        'pom_project': "PRO"},
+    "perso": {
+        'git_dirs': [],
+        'pom_project': "PERSO"},
 }
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -71,7 +77,10 @@ def project_to_df(project_name):
 
     for project_git_dir in projects[project_name]['git_dirs']:
         git_dfs.append(repo_to_df(project_git_dir))
-    res_df = pd.concat(git_dfs)
+    if len(git_dfs) == 0:
+        res_df = None
+    else:
+        res_df = pd.concat(git_dfs)
     return res_df
 
 
@@ -177,10 +186,15 @@ def merge_histories(project_name, later_date=None, sooner_date=None):
         sooner_date = datetime(later_date.year, 1, 1)
 
     git_df = project_to_df(project_name)
-    dly_df = daily_commits(git_df)
-    hrs_df = hours_per_day(git_df)
+    df_to_concat = []
+    if git_df is not None:
+        dly_df = daily_commits(git_df)
+        df_to_concat.append(dly_df)
+        hrs_df = hours_per_day(git_df)
+        df_to_concat.append(hrs_df)
     pom_df = pomofocus_to_df(project_name)
-    res_df = pd.concat([pom_df, hrs_df, dly_df], axis=1)
+    df_to_concat.append(pom_df)
+    res_df = pd.concat(df_to_concat, axis=1)
 
     res_df = res_df.truncate(before=sooner_date, after=later_date)
     new_index = pd.date_range(start=sooner_date, end=later_date)

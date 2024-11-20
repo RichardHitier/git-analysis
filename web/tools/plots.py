@@ -24,14 +24,20 @@ def plot_df(df):
 
     ax[0].tick_params(axis='x', labelsize=10, rotation=30)
 
-    ax[0].xaxis.set_major_formatter(mdates.DateFormatter(date_format))
-    ax[0].set_title("Number of Commits per day")
-    bc = ax[0].bar(pd_dr, df.nb_commits, color="red", width=0.8, edgecolor="black")
+    try:
+        ax[0].xaxis.set_major_formatter(mdates.DateFormatter(date_format))
+        ax[0].set_title("Number of Commits per day")
+        bc = ax[0].bar(pd_dr, df.nb_commits, color="red", width=0.8, edgecolor="black")
+    except AttributeError:
+        pass
 
-    ax[1].tick_params(axis='x', labelsize=10, rotation=30)
-    ax[1].xaxis.set_major_formatter(mdates.DateFormatter(date_format))
-    ax[1].set_title("Worked hours per day")
-    cbc = ax[1].bar(pd_dr, df.duration_hour, color="blue", width=0.8, edgecolor="black")
+    try:
+        ax[1].tick_params(axis='x', labelsize=10, rotation=30)
+        ax[1].xaxis.set_major_formatter(mdates.DateFormatter(date_format))
+        ax[1].set_title("Worked hours per day")
+        cbc = ax[1].bar(pd_dr, df.duration_hour, color="blue", width=0.8, edgecolor="black")
+    except AttributeError:
+        pass
 
     ax[2].tick_params(axis='x', labelsize=10, rotation=30)
     ax[2].xaxis.set_major_formatter(mdates.DateFormatter(date_format))
@@ -43,7 +49,7 @@ def plot_df(df):
 
 
 if __name__ == "__main__":
-    df = merge_histories("calipso")
+    df = merge_histories("pro")
 
     my_fig = plot_df(df)
 
