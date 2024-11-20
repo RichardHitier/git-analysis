@@ -60,6 +60,19 @@ def repo_to_df(project_git_dir):
     return _df
 
 
+def project_to_git_df(project_name):
+    # get the git history, raw
+    if project_name not in projects.keys():
+        raise (ProjectError(f"Wrong project name:{project_name}"))
+
+    git_dfs = []
+
+    for project_git_dir in projects[project_name]['git_dirs']:
+        git_dfs.append(repo_to_df(project_git_dir))
+    res_df = pd.concat(git_dfs)
+    return res_df
+
+
 def hours_per_day(project_name):
     """ From The git history dataframe,
         build a new serie with the number of hours worked each day.

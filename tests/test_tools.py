@@ -1,10 +1,16 @@
-from web.tools.histories import repo_to_df, hours_per_day, pomofocus_to_df, merge_histories
+from web.tools.histories import repo_to_df, hours_per_day, pomofocus_to_df, merge_histories, project_to_git_df
 
 
 def test_repo_to_df():
     project_git_dir = "/home/richard/01DEV/CalipsoProject/calipso-dispatcher-clients/.git"
     df = repo_to_df(project_git_dir)
     print(df.head(20))
+    assert True
+
+
+def test_project_to_git_df():
+    df = project_to_git_df("calipso")
+    print(df)
     assert True
 
 
