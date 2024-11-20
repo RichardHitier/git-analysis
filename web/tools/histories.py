@@ -80,12 +80,12 @@ def daily_commits(project_df):
         build a new dataframe, indexed by days, with sum of commits per day
     """
 
+    project_df = project_df.copy()
     project_df.index = project_df.day
-    project_df.rename(columns={"nb_commits": "commits"}, inplace=True)
+    # project_df.rename(columns={"nb_commits": "commits"}, inplace=True)
     project_df.drop(columns=["date", "hour", "day"], inplace=True)
     project_df.index = pd.to_datetime(project_df.index)
 
-    # groupby_key = "date"
     groupby_key = "day"
 
     _df_agg = project_df.groupby(groupby_key).agg("sum")
@@ -100,7 +100,6 @@ def daily_commits(project_df):
     _df_reindexed = _df_agg.reindex(new_index)
 
     _df_cutted = _df_reindexed.truncate(before="2023-09-01")
-    # _df_cutted = _df_reindexed.copy()
 
     return _df_cutted
 
@@ -112,6 +111,7 @@ def hours_per_day(project_df):
     """
 
     # day by day, get the min hour, and max hour
+    project_df = project_df.copy()
     df_3 = project_df.groupby("day").date.agg(["min", "max"])
     df_4 = df_3.copy()
 
@@ -177,9 +177,10 @@ def merge_histories(project_name, later_date=None, sooner_date=None):
         sooner_date = datetime(later_date.year, 1, 1)
 
     git_df = project_to_df(project_name)
+    dly_df = daily_commits(git_df)
     hrs_df = hours_per_day(git_df)
     pom_df = pomofocus_to_df(project_name)
-    res_df = pd.concat([pom_df, hrs_df], axis=1)
+    res_df = pd.concat([pom_df, hrs_df, dly_df], axis=1)
 
     res_df = res_df.truncate(before=sooner_date, after=later_date)
     new_index = pd.date_range(start=sooner_date, end=later_date)
