@@ -60,7 +60,9 @@ def repo_to_df(project_git_dir):
     return _df
 
 
-def project_to_git_df(project_name):
+def project_to_df(project_name):
+    """From a project name, concatenate a list of repository
+    """
     # get the git history, raw
     if project_name not in projects.keys():
         raise (ProjectError(f"Wrong project name:{project_name}"))
@@ -73,21 +75,11 @@ def project_to_git_df(project_name):
     return res_df
 
 
-def hours_per_day(project_name):
+def hours_per_day(df_2):
     """ From The git history dataframe,
         build a new serie with the number of hours worked each day.
         in fact, a delta between last and first commit time for each day.
     """
-
-    # get the git history, raw
-    if project_name not in projects.keys():
-        raise (ProjectError(f"Wrong project name:{project_name}"))
-
-    df_2 = pd.DataFrame()
-
-    for project_git_dir in projects[project_name]['git_dirs']:
-        df_1 = repo_to_df(project_git_dir)
-        df_2 = pd.concat([df_2, df_1])
 
     # day by day, get the min hour, and max hour
     df_3 = df_2.groupby("day").date.agg(["min", "max"])
@@ -98,7 +90,7 @@ def hours_per_day(project_name):
     df_4["duration_hour"] = df_4.apply(lambda x: f"{x['duration'].seconds / 3600:.02f}", axis=1)
     df_4["duration_day"] = df_4.apply(lambda x: f"{x['duration'].seconds / (3600 * 8):.03f}", axis=1)
     df_5 = df_4[["duration_hour", "duration_day"]]
-    df_5["project"] = project_name
+    # df_5["project"] = project_name
     df_5.index = pd.to_datetime(df_5.index)
     new_index = pd.date_range(start=df_5.index[0], end=df_5.index[-1])
     df_6 = df_5.reindex(new_index)
@@ -154,9 +146,10 @@ def merge_histories(project_name, later_date=None, sooner_date=None):
     if sooner_date is None:
         sooner_date = datetime(later_date.year, 1, 1)
 
-    git_df = hours_per_day(project_name)
+    git_df = project_to_df(project_name)
+    hrs_df = hours_per_day(git_df)
     pom_df = pomofocus_to_df(project_name)
-    res_df = pd.concat([pom_df, git_df], axis=1)
+    res_df = pd.concat([pom_df, hrs_df], axis=1)
 
     res_df = res_df.truncate(before=sooner_date, after=later_date)
     new_index = pd.date_range(start=sooner_date, end=later_date)
