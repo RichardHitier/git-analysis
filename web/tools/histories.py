@@ -75,6 +75,36 @@ def project_to_df(project_name):
     return res_df
 
 
+def daily_commits(project_df):
+    """ From the one commit per row dataframe,
+        build a new dataframe, indexed by days, with sum of commits per day
+    """
+
+    project_df.index = project_df.day
+    project_df.rename(columns={"nb_commits": "commits"}, inplace=True)
+    project_df.drop(columns=["date", "hour", "day"], inplace=True)
+    project_df.index = pd.to_datetime(project_df.index)
+
+    # groupby_key = "date"
+    groupby_key = "day"
+
+    _df_agg = project_df.groupby(groupby_key).agg("sum")
+
+    _df_agg.sort_values(groupby_key, inplace=True)
+
+    start_date = _df_agg.index[0]
+    end_date = _df_agg.index[-1]
+
+    new_index = pd.date_range(start=start_date, end=end_date, freq="d")
+
+    _df_reindexed = _df_agg.reindex(new_index)
+
+    _df_cutted = _df_reindexed.truncate(before="2023-09-01")
+    # _df_cutted = _df_reindexed.copy()
+
+    return _df_cutted
+
+
 def hours_per_day(project_df):
     """ From The git history dataframe,
         build a new series with the number of hours worked each day.

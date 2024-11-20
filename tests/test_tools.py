@@ -1,4 +1,5 @@
-from web.tools.histories import repo_to_df, hours_per_day, pomofocus_to_df, merge_histories, project_to_df
+from web.tools.histories import repo_to_df, hours_per_day, pomofocus_to_df, merge_histories, project_to_df, \
+    daily_commits
 
 
 def test_repo_to_df():
@@ -8,9 +9,17 @@ def test_repo_to_df():
     assert True
 
 
-def test_project_to_git_df():
+def test_project_to_df():
     df = project_to_df("calipso")
     print(df)
+    assert True
+
+
+def test_daily_commit():
+    git_df = project_to_df("calipso")
+    df = daily_commits(git_df)
+    print(df)
+    # assert len(df) == 58
     assert True
 
 
