@@ -70,7 +70,7 @@ def hours_per_day(project_name):
     if project_name not in projects.keys():
         raise (ProjectError(f"Wrong project name:{project_name}"))
 
-    df_2 = pd.DataFrame(columns=['duration_hour', 'duration_day', ' project'])
+    df_2 = pd.DataFrame()
 
     for project_git_dir in projects[project_name]['git_dirs']:
         df_1 = history_df(project_git_dir)
