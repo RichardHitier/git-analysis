@@ -1,3 +1,11 @@
 #img_data {
-width: 100%;
+    width: 100%;
+}
+
+.center-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
 }
