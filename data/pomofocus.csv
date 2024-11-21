@@ -229,4 +229,26 @@ date,project,task,minutes,startTime,endTime
 20241113,"CALIPSO DEV","IIRO input TM",50,07:54,08:54
 20241113,"CALIPSO DEV","IIRO input TM",25,09:39,10:04
 20241113,"PRO ADMIN","Salaire et Budget",7,10:07,10:14
-20241114,"CALIPSO DEV","IIRO input TM",75,09:58,11:40
+20241114,"CALIPSO DEV","IIRO input TM",88,09:58,11:38
+20241114,"CALIPSO DEV","Install IIRO_INPUTS on C1",75,13:57,15:12
+20241114,"CALIPSO DEV","Install IIRO_INPUTS on C1",25,16:00,16:25
+20241115,"PRO ADMIN","Facture OCT 2024",4,08:33,08:37
+20241115,"CALIPSO ADMIN","Calipso days counting",46,08:37,09:24
+20241115,"CALIPSO ADMIN","Calipso days counting",17,10:31,10:49
+20241115,"PRO ADMIN","Facture OCT 2024",22,10:49,11:20
+20241115,"PERSO ADMIN","Résa Stages Apnée",36,11:20,11:56
+20241115,"PERSO ADMIN","Divers paiements",25,12:04,12:29
+20241115,"CALIPSO ADMIN","Calipso days counting",1,16:33,16:35
+20241115,"PERSO ACTIONS","Comptage Vélo/PPG",99,16:35,18:52
+20241118,"PERSO DEV","Comptage Vélo/PPG",50,13:55,14:45
+20241118,"PRO DEV","Project days counting",50,14:55,16:01
+20241118,"PRO DEV","Project days counting",44,17:16,18:05
+20241119,"PRO DEV","Project days counting",25,08:06,08:31
+20241119,"PRO DEV","Project days counting",50,11:14,12:04
+20241119,"PRO DEV","Project days counting",25,12:49,13:14
+20241119,"PRO DEV","Project days counting",35,15:03,15:46
+20241119,"PRO DEV","Project days counting",15,16:43,16:57
+20241120,"PRO DEV","Project days counting",25,08:01,08:26
+20241120,"PRO DEV","Project days counting",50,10:39,11:45
+20241120,"PRO DEV","Project days counting",25,14:53,15:18
+20241120,"PRO DEV","Project days counting",50,18:14,19:04
