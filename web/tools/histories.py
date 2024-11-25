@@ -139,7 +139,7 @@ def hours_per_day(project_df):
     return df_6
 
 
-def pomofocus_to_df(project_name):
+def pomo_minutes(project_name):
     if project_name not in projects.keys():
         raise (ProjectError(f"Wrong project name:{project_name}"))
 
@@ -192,7 +192,7 @@ def merge_histories(project_name, later_date=None, sooner_date=None):
         df_to_concat.append(dly_df)
         hrs_df = hours_per_day(git_df)
         df_to_concat.append(hrs_df)
-    pom_df = pomofocus_to_df(project_name)
+    pom_df = pomo_minutes(project_name)
     df_to_concat.append(pom_df)
     res_df = pd.concat(df_to_concat, axis=1)
 

@@ -1,4 +1,4 @@
-from web.tools.histories import repo_to_df, hours_per_day, pomofocus_to_df, merge_histories, project_to_df, \
+from web.tools.histories import repo_to_df, hours_per_day, pomo_minutes, merge_histories, project_to_df, \
     daily_commits
 
 
@@ -32,7 +32,7 @@ def test_hours_per_day():
 
 
 def test_pomofocus_to_df():
-    df = pomofocus_to_df("calipso")
+    df = pomo_minutes("calipso")
     print(df)
     # assert len(df) == 58
     assert True
