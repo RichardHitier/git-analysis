@@ -4,7 +4,7 @@ from io import BytesIO
 from flask import redirect, url_for, render_template
 
 from . import bp
-from ..tools.histories import repo_to_df, hours_per_day, merge_histories
+from ..tools.histories import merge_histories, pomofocus_to_df
 from ..tools.plots import plot_df
 
 

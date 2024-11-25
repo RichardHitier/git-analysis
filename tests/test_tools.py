@@ -1,5 +1,5 @@
 from web.tools.histories import repo_to_df, hours_per_day, pomo_minutes, merge_histories, project_to_df, \
-    daily_commits
+    daily_commits, pomofocus_to_df
 
 
 def test_repo_to_df():
@@ -30,9 +30,12 @@ def test_hours_per_day():
     # assert len(df) == 58
     assert True
 
-
 def test_pomofocus_to_df():
-    df = pomo_minutes("calipso")
+    pom_df =  pomofocus_to_df()
+    print(pom_df.main_project.drop_duplicates())
+
+def test_pomo_minutes():
+    df = pomo_minutes("calipso", pomofocus_to_df())
     print(df)
     # assert len(df) == 58
     assert True

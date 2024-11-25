@@ -139,18 +139,22 @@ def hours_per_day(project_df):
     return df_6
 
 
-def pomo_minutes(project_name):
+def pomofocus_to_df():
+    _df = pd.read_csv(os.path.join(data_dir, 'pomofocus.csv'), header=0, index_col=0, parse_dates=True)
+    # read_excel("pomodoros.ods", sheet_name="pomodoros",header=1, index_col=0, parse_dates=True)
+    _df.fillna(0, inplace=True)
+    # 1- Insert new column 'main_project' keeping first part of project name
+    _df.insert(0, 'main_project', "")
+    _df['main_project'] = _df.project.apply(lambda x: x.split()[0] if x != 0 else "")
+
+    return _df
+
+
+def pomo_minutes(project_name, _my_df):
     if project_name not in projects.keys():
         raise (ProjectError(f"Wrong project name:{project_name}"))
 
     pom_project = projects[project_name]['pom_project']
-
-    _my_df = pd.read_csv(os.path.join(data_dir, 'pomofocus.csv'), header=0, index_col=0, parse_dates=True)
-    # read_excel("pomodoros.ods", sheet_name="pomodoros",header=1, index_col=0, parse_dates=True)
-    _my_df.fillna(0, inplace=True)
-    # 1- Insert new column 'main_project' keeping first part of project name
-    _my_df.insert(0, 'main_project', "")
-    _my_df['main_project'] = _my_df.project.apply(lambda x: x.split()[0] if x != 0 else "")
 
     # 2- extract wanted project only and keep only two columns
     _my_df = _my_df[_my_df['main_project'] == pom_project]
@@ -192,8 +196,8 @@ def merge_histories(project_name, later_date=None, sooner_date=None):
         df_to_concat.append(dly_df)
         hrs_df = hours_per_day(git_df)
         df_to_concat.append(hrs_df)
-    pom_df = pomo_minutes(project_name)
-    df_to_concat.append(pom_df)
+    minutes_df = pomo_minutes(project_name, pomofocus_to_df())
+    df_to_concat.append(minutes_df)
     res_df = pd.concat(df_to_concat, axis=1)
 
     res_df = res_df.truncate(before=sooner_date, after=later_date)
