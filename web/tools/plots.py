@@ -20,9 +20,6 @@ def plot_df(_df):
 
     _df = _df.reindex(pd_dr)
 
-    pd.set_option("display.max_rows", None)
-    print(_df)
-
     fig, ax = plt.subplots(3, figsize=(20, 8), sharex=True)
 
     # ax[0].tick_params(axis='x', labelsize=10, rotation=30)

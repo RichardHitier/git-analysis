@@ -172,22 +172,13 @@ def pomo_minutes(project_name, _my_df):
     return _my_df
 
 
-def merge_histories(project_name, later_date=None, sooner_date=None):
+def merge_histories(project_name):
     """
     Merge git history and pomodoro history in one dataframe
 
-    :param sooner_date:
-    :param later_date:
     :param project_name:
     :return:
     """
-    today = datetime.now()
-
-    if later_date is None:
-        later_date = today
-
-    if sooner_date is None:
-        sooner_date = datetime(later_date.year, 1, 1)
 
     git_df = project_to_df(project_name)
     df_to_concat = []
@@ -199,9 +190,8 @@ def merge_histories(project_name, later_date=None, sooner_date=None):
     minutes_df = pomo_minutes(project_name, pomofocus_to_df())
     df_to_concat.append(minutes_df)
     res_df = pd.concat(df_to_concat, axis=1)
+    res_df.fillna(0.0, inplace=True)
 
-    res_df = res_df.truncate(before=sooner_date, after=later_date)
-    new_index = pd.date_range(start=sooner_date, end=later_date)
+    new_index = pd.date_range(start=res_df.index[0], end=res_df.index[-1])
     res_df = res_df.reindex(new_index)
-    # df_5 = df_4[["duration_hour", "duration_day"]].truncate(before="2024-09-15")
     return res_df
