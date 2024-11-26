@@ -2,5 +2,11 @@
 
 {% block content %}
 
+<ul>
+{% for p in projects %}
+    <li> {{p}} </li>
+{% endfor %}
+</ul>
+<img id="img_data" src='data:image/png;base64,{{img_data}}'/>
 
 {% endblock %}

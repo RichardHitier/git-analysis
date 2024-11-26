@@ -66,7 +66,7 @@ def pom_plot(_df):
         p_df = pomo_minutes(p, _df)
         pbc = ax.bar(p_df.index, p_df, width=0.5)
 
-    return fig
+    return fig, projects
 
 
 if __name__ == "__main__":
@@ -77,7 +77,7 @@ if __name__ == "__main__":
 
     # my_fig = plot_df(_df)
 
-    my_fig = pom_plot(pom_df)
+    my_fig, p_l = pom_plot(pom_df)
     # my_fig.show()
 
     plt.show()

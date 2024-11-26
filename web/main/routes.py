@@ -6,7 +6,7 @@ from flask import redirect, url_for, render_template, request
 
 from . import bp
 from ..tools.histories import merge_histories, pomofocus_to_df
-from ..tools.plots import plot_df
+from ..tools.plots import plot_df, pom_plot
 
 
 @bp.route("/")
@@ -40,3 +40,8 @@ def commits(project_name):
 @bp.route("/projects")
 def projects():
     pom_df = pomofocus_to_df()
+    buf = BytesIO()
+    my_fig, p_l = pom_plot(pom_df)
+    my_fig.savefig(buf, format="png")
+    img_data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    return render_template("projects.html", projects=p_l, img_data=img_data)
