@@ -25,3 +25,8 @@ def commits(project_name):
     # Embed the result in the html output.
     img_data = base64.b64encode(buf.getbuffer()).decode("ascii")
     return render_template("commits.html", hits=hits_df.to_html(), img_data=img_data)
+
+
+@bp.route("/projects")
+def projects():
+    pom_df = pomofocus_to_df()
