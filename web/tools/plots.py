@@ -13,7 +13,7 @@ def plot_df(_df):
     # get current month day
     today = date.today()
 
-    month_before = today - timedelta(days=60)
+    month_before = today - timedelta(days=2065)
     month_after = today + timedelta(days=30)
 
     pd_dr = pd.date_range(start=month_before, end=month_after, freq="D")

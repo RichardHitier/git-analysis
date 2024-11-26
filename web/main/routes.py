@@ -1,7 +1,8 @@
 import base64
 from io import BytesIO
 
-from flask import redirect, url_for, render_template
+from dateutil import parser
+from flask import redirect, url_for, render_template, request
 
 from . import bp
 from ..tools.histories import merge_histories, pomofocus_to_df
@@ -16,9 +17,18 @@ def index():
 @bp.route("/commits/<project_name>", methods=["GET"])
 def commits(project_name):
     from datetime import datetime, timedelta
-    later_date = datetime.now()
-    sooner_date = later_date - timedelta(days=120)
-    hits_df = merge_histories(project_name).truncate(before=sooner_date, after=later_date)
+    not_before = request.args.get('not_before')
+    not_after = request.args.get('not_after')
+    if not_after is None:
+        later_date = datetime.now()
+    else:
+        later_date = parser.parse(not_after)
+    if not_before is None:
+        sooner_date = later_date - timedelta(days=60)
+    else:
+        sooner_date = parser.parse(not_before)
+    hits_df = merge_histories(project_name)
+    hits_df = hits_df.truncate(before=sooner_date, after=later_date)
     hits_fig = plot_df(hits_df)
     buf = BytesIO()
     hits_fig.savefig(buf, format="png")
