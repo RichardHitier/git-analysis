@@ -268,3 +268,116 @@ date,project,task,minutes,startTime,endTime
 20241125,"PERSO DEV","Compter la compta",38,09:47,10:26
 20241125,"PERSO ACTIONS","Divers",11,10:26,10:37
 20241125,"BHT ADMIN","compta jours",50,10:52,11:59
+20241126,"BHT ADMIN","compta jours",27,08:11,09:00
+20241126,"PRO DEV","git analysis",73,09:50,11:29
+20241126,"PRO ADMIN","Divers paiements",50,14:54,15:44
+20241126,"PRO ADMIN","Divers paiements",0,16:49,16:49
+20241126,"PRO DEV","git analysis",25,16:49,17:14
+20241127,"BHT DEV","redémarrage",30,08:17,08:53
+20241127,"BHT DEV","redémarrage",45,10:04,11:13
+20241128,"BHT DEV","redémarrage",50,10:23,11:32
+20241128,"BHT DEV","redémarrage",75,15:49,17:04
+20241129,"BHT DEV","redémarrage",67,08:06,09:23
+20241129,"BHT DEV","redémarrage",33,10:08,10:59
+20241202,"BHT DEV","redémarrage",5,08:27,08:32
+20241202,"PERSO DEV","Echauffement du matin",20,08:32,08:52
+20241202,"PERSO DEV","Echauffement du matin",62,10:07,11:29
+20241202,"BHT DEV","redémarrage",14,13:56,14:10
+20241202,"BHT DEV","sutime tries",35,14:10,14:50
+20241202,"PRO ACTION_CO","coaching ",65,15:02,16:08
+20241202,"PRO ACTION_CO","coaching ",25,19:46,20:11
+20241202,"PRO ACTION_CO","coaching ",50,21:11,22:01
+20241203,"PRO ACTION_CO","coaching ",125,15:22,18:01
+20241204,"PRO ADMIN","Divers paiements",37,08:07,08:44
+20241204,"BHT DEV","sutime tries",0,08:45,08:45
+20241204,"PRO ACTION_CO","coaching ",7,09:16,09:23
+20241204,"BHT DEV","sutime tries",6,09:23,09:29
+20241204,"PRO ADMIN","Divers paiements",5,09:35,09:40
+20241204,"BHT DEV","sutime tries",45,09:40,10:25
+20241204,"PRO ACTION_CO","coaching ",25,10:25,10:50
+20241204,"BHT DEV","sutime tries",25,10:53,11:18
+20241205,"BHT DEV","sutime tries",125,09:10,12:05
+20241205,"BHT DEV","sutime tries",50,13:21,14:13
+20241205,"BHT DEV","sutime tries",63,14:53,15:58
+20241205,"CALIPSO DEV","uv displacement",12,15:58,16:10
+20241205,"BHT DEV","sutime tries",25,16:13,16:38
+20241206,"PRO ADMIN","Divers paiements",25,09:04,09:29
+20241206,"BHT DEV","sutime tries",67,09:29,10:36
+20241206,"PERSO ACTIONS","planning velo",58,11:05,12:04
+20241206,"BHT DEV","sutime tries",50,14:42,15:34
+20241209,"PRO ACTION_CO","coaching ",50,08:11,09:14
+20241209,"PRO ACTION_CO","coaching ",25,10:07,10:32
+20241209,"BHT DEV","sutime tries",50,10:46,11:53
+20241209,"BHT DEV","sutime tries",0,13:53,13:53
+20241209,"BHT DEV","sutime tries",50,15:18,16:08
+20241210,"BHT DEV","sutime tries",75,07:57,09:36
+20241210,"BHT DEV","sutime tries",50,11:12,12:02
+20241210,"BHT DEV","sutime tries",125,15:05,17:21
+20241211,"BHT DEV","sutime tries",25,08:11,08:36
+20241211,"BHT DEV","sutime tries",55,09:06,10:31
+20241211,"BHT DEV","sutime tries",45,11:03,11:48
+20241211,"BHT DEV","sutime tries",50,14:24,15:22
+20241212,"BHT DEV","sutime tries",35,09:52,10:32
+20241212,"BHT DEV","sutime tries",15,11:20,11:35
+20241212,"BHT DEV","sutime tries",0,13:59,13:59
+20241212,"CALIPSO DEV","uv displacement",125,14:19,16:57
+20241216,"CALIPSO DEV","uv displacement",125,09:35,12:25
+20241216,"CALIPSO DEV","uv displacement",150,13:21,16:12
+20241217,"BHT DEV","sutime tries",100,08:58,11:14
+20241217,"BHT DEV","sutime tries",25,12:44,13:09
+20241217,"CALIPSO DEV","uv displacement",25,14:49,15:15
+20241217,"BHT DEV","sutime tries",50,15:15,16:13
+20241218,"PRO ACTION_CO","coaching ",25,08:24,08:49
+20241218,"PRO ACTION_CO","coaching ",50,09:28,10:43
+20241218,"BHT DEV","sutime tries",50,10:50,11:47
+20241219,"BHT DEV","sutime tries",175,09:29,12:29
+20241220,"BHT DEV","sutime tries",75,08:21,10:02
+20241220,"BHT DEV","sutime tries",25,10:57,11:22
+20241220,"BHT DEV","sutime tries",25,14:49,15:14
+20241220,"BHT DEV","sutime tries",37,17:13,18:09
+20241223,"BHT DEV","sutime tries",25,20:32,20:57
+20241230,"BHT DEV","sutime tries",67,08:28,10:05
+20241230,"BHT DEV","sutime tries",43,11:02,11:54
+20241230,"PERSO ACTIONS","planning velo",32,15:47,16:31
+20241230,"BHT DEV","sutime tries",25,16:58,17:23
+20241231,"PERSO DEV","Echauffement du matin",18,09:14,09:32
+20241231,"BHT DEV","sutime tries",7,09:32,09:39
+20241231,"BHT DEV","sutime tries",75,10:59,12:27
+20241231,"BHT DEV","sutime tries",175,14:01,17:08
+20250109,"BHT DEV","sutime tries",25,08:21,08:46
+20250109,"BHT DEV","sutime tries",50,10:36,11:26
+20250110,"BHT DEV","sutime tries",25,08:49,09:14
+20250110,"BHT DEV","sutime tries",25,10:01,10:26
+20250113,"PERSO ADMIN","caf, compta, etc",4,08:01,08:05
+20250113,"BHT DEV","sutime tries",46,08:05,08:51
+20250113,"BHT DEV","sutime tries",25,12:02,12:27
+20250114,"BHT DEV","sutime tries",19,08:12,08:30
+20250114,"BHT DEV","Traitement Massif",31,08:31,09:02
+20250114,"BHT DEV","Traitement Massif",150,09:37,12:27
+20250114,"BHT DEV","Traitement Massif",2,14:32,14:34
+20250114,"BHT DEV","Traitement Massif",123,15:17,17:31
+20250115,"BHT DEV","Traitement Massif",25,08:15,08:40
+20250115,"BHT DEV","Traitement Massif",25,11:00,11:25
+20250115,"BHT DEV","Traitement Massif",75,16:26,17:48
+20250116,"BHT DEV","Traitement Massif",125,09:30,12:27
+20250116,"BHT DEV","Traitement Massif",100,13:23,15:04
+20250116,"BHT DEV","Traitement Massif",100,16:26,18:07
+20250120,"BHT DEV","Traitement Massif",75,08:25,10:11
+20250120,"BHT DEV","Traitement Massif",50,10:44,11:35
+20250120,"BHT DEV","Traitement Massif",75,14:54,16:10
+20250120,"BHT DEV","Traitement Massif",25,17:31,17:56
+20250121,"BHT DEV","Traitement Massif",125,08:41,12:00
+20250121,"BHT DEV","Traitement Massif",25,14:52,15:17
+20250121,"BHT DEV","Traitement Massif",25,15:51,16:16
+20250122,"BHT DEV","Traitement Massif",25,08:18,08:43
+20250122,"BHT DEV","Traitement Massif",50,10:18,11:11
+20250122,"BHT DEV","Traitement Massif",25,17:24,17:49
+20250123,"BHT DEV","Traitement Massif",75,09:29,10:45
+20250123,"BHT DEV","Traitement Massif",50,11:31,12:21
+20250123,"BHT DEV","Traitement Massif",100,14:22,16:15
+20250124,"BHT DEV","Traitement Massif",50,08:10,09:02
+20250124,"BHT DEV","Traitement Massif",50,10:18,11:18
+20250124,"BHT DEV","Traitement Massif",25,15:11,15:36
+20250127,"PERSO ACTIONS","planning velo",25,08:21,08:46
+20250127,"PERSO ACTIONS","Plannifications",25,08:47,09:12
+20250127,"PRO ADMIN","Divers paiements",25,09:36,10:01
