@@ -4,24 +4,7 @@ import pandas as pd
 
 import subprocess
 
-projects = {
-    "calipso": {
-        'git_dirs': ['/home/richard/01DEV/CalipsoProject/calipso-dispatcher-clients/.git',
-                     '/home/richard/01DEV/CalipsoProject/calipso-dispatcher-studio-1/.git',
-                     '/home/richard/01DEV/CalipsoProject/calipso-net-module/.git',
-                     '/home/richard/01DEV/CalipsoProject/.git',
-                     ],
-        'pom_project': "CALIPSO"},
-    "bht": {
-        'git_dirs': ['/home/richard/01DEV/bht2/.git'],
-        'pom_project': "BHT"},
-    "pro": {
-        'git_dirs': [],
-        'pom_project': "PRO"},
-    "perso": {
-        'git_dirs': [],
-        'pom_project': "PERSO"},
-}
+from config import projects
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 data_dir = os.path.join(dir_path, '../../data')
