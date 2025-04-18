@@ -30,9 +30,11 @@ def test_hours_per_day():
     # assert len(df) == 58
     assert True
 
+
 def test_pomofocus_to_df():
-    pom_df =  pomofocus_to_df()
+    pom_df = pomofocus_to_df()
     print(pom_df.main_project.drop_duplicates())
+
 
 def test_pomo_minutes():
     df = pomo_minutes("calipso", pomofocus_to_df())
