@@ -1,10 +1,9 @@
 import pandas as pd
-import matplotlib.dates as mdates
 from matplotlib import pyplot as plt
 
 from datetime import date, timedelta
 
-from web.tools.histories import merge_histories, pomo_minutes, pomofocus_to_df
+from web.tools.histories import pomo_minutes, pomofocus_to_df
 
 
 def plot_df(_df):
@@ -68,7 +67,9 @@ def pom_plot(_df):
 
 if __name__ == "__main__":
     # df = merge_histories("pro")
-    pom_df = pomofocus_to_df()
+    from config import load_config
+    pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
+    pom_df = pomofocus_to_df(pomofocus_file)
     # print(pom_df.minutes)
     # _df = pomo_minutes("bht", pom_df)
 
