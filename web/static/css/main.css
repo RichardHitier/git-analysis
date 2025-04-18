@@ -1,0 +1,34 @@
+#img_data {
+    width: 100%;
+}
+
+
+.center-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+}
+
+ul li {
+    text-align: center;
+    width: 80px;
+    border: solid black 1pt;
+    display: inline-block;
+    padding: 0pt;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    margin: 0 0 0 0 ;
+}
+
+a:hover
+{
+    background-color: lightblue;
+}

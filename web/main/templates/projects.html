@@ -1,0 +1,12 @@
+{% extends "base_page.html" %}
+
+{% block content %}
+
+<ul id="projects_menu">
+{% for p in projects %}
+    <li> <a href="{{url_for('main.commits', project_name=p)}}">{{p}} </a></li>
+{% endfor %}
+</ul>
+<img id="img_data" src='data:image/png;base64,{{img_data}}'/>
+
+{% endblock %}

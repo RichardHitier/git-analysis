@@ -1,0 +1,9 @@
+jupyterlab
+pandas
+pyarrow
+ipympl
+matplotlib
+gitpython
+jupyterlab_vim
+import-ipynb @ https://github.com/StuffyMonkey/import-ipynb/archive/refs/heads/master.zip
+odfpy

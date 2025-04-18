@@ -1,0 +1,9 @@
+{% extends "base_page.html" %}
+
+{% block content %}
+
+<img id="img_data" src='data:image/png;base64,{{img_data}}'/>
+<div class="center-screen">
+    {{hits|safe}}
+</div>
+{% endblock %}
