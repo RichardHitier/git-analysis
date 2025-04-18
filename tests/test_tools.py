@@ -31,20 +31,20 @@ def test_hours_per_day():
     assert True
 
 
-def test_pomofocus_to_df():
-    pom_df = pomofocus_to_df()
+def test_pomofocus_to_df(pomofocus_file):
+    pom_df = pomofocus_to_df(pomofocus_file)
     print(pom_df.main_project.drop_duplicates())
 
 
-def test_pomo_minutes():
-    df = pomo_minutes("calipso", pomofocus_to_df())
+def test_pomo_minutes(pomofocus_file):
+    df = pomo_minutes("calipso", pomofocus_to_df(pomofocus_file))
     print(df)
     # assert len(df) == 58
     assert True
 
 
-def test_merge_histories():
-    df = merge_histories("calipso")
+def test_merge_histories(pomofocus_file):
+    df = merge_histories("calipso", pomofocus_file)
     import pandas as pd
     pd.set_option('display.max_rows', None)
     print(df)
