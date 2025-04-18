@@ -4,6 +4,8 @@ import pandas as pd
 
 import subprocess
 
+from matplotlib.style.core import available
+
 from config import projects
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -195,3 +197,23 @@ def merge_histories(project_name):
     res_df = res_df.reindex(new_index)
     return res_df
 
+
+if __name__ == "__main__":
+    pd.set_option('display.max_rows', None)
+    available_options = ['pomofocus', 'pomo_bht', 'git_bht', 'merged_bht']
+    import sys
+    cli_arg = None
+    if len(sys.argv) > 1:
+        cli_arg = sys.argv[1]
+    if cli_arg == 'pomofocus':
+        print(pomofocus_to_df())
+    elif cli_arg == 'git_all':
+        print('gitall')
+    elif cli_arg == 'pomo_bht':
+        print(pomo_minutes('bht', pomofocus_to_df()))
+    elif cli_arg == 'git_bht':
+        print(project_to_df('bht'))
+    elif cli_arg == 'merged_bht':
+        print(merge_histories('bht'))
+    else:
+        print(f"Pass option in [{', '.join(available_options)}]")
