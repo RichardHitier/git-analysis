@@ -4,12 +4,7 @@ import pandas as pd
 
 import subprocess
 
-from matplotlib.style.core import available
-
-from config import projects
-
-dir_path = os.path.dirname(os.path.realpath(__file__))
-data_dir = os.path.join(dir_path, '../../data')
+from config import load_projects
 
 
 class ProjectError(Exception):
@@ -58,6 +53,7 @@ def project_to_df(project_name):
        see also:
         - :meth: `repo_to_df()`
     """
+    projects = load_projects()
     # get the git history, raw
     if project_name not in projects.keys():
         raise (ProjectError(f"Wrong project name:{project_name}"))
@@ -134,11 +130,11 @@ def hours_per_day(project_df):
     return df_6
 
 
-def pomofocus_to_df():
+def pomofocus_to_df(pomofocus_file):
     """From a pomofocus exported file
        build the dataframe
     """
-    _df = pd.read_csv(os.path.join(data_dir, 'pomofocus.csv'), header=0, index_col=0, parse_dates=True)
+    _df = pd.read_csv(pomofocus_file, header=0, index_col=0, parse_dates=True)
     # read_excel("pomodoros.ods", sheet_name="pomodoros",header=1, index_col=0, parse_dates=True)
     _df.fillna(0, inplace=True)
     # 1- Insert new column 'main_project' keeping first part of project name
@@ -152,6 +148,7 @@ def pomo_minutes(project_name, _my_df):
     """From the pomofocus data_frame
         extract given project minutes df
     """
+    projects = load_projects()
     if project_name not in projects.keys():
         raise (ProjectError(f"Wrong project name:{project_name}"))
 
@@ -173,10 +170,11 @@ def pomo_minutes(project_name, _my_df):
     return _my_df
 
 
-def merge_histories(project_name):
+def merge_histories(project_name, pomofocus_file):
     """
     Merge git and pomodoro histories in one dataframe
 
+    :param pomofocus_file:
     :param project_name:
     :return:
     """
@@ -188,7 +186,7 @@ def merge_histories(project_name):
         df_to_concat.append(dly_df)
         hrs_df = hours_per_day(git_df)
         df_to_concat.append(hrs_df)
-    minutes_df = pomo_minutes(project_name, pomofocus_to_df())
+    minutes_df = pomo_minutes(project_name, pomofocus_to_df(pomofocus_file))
     df_to_concat.append(minutes_df)
     res_df = pd.concat(df_to_concat, axis=1)
     res_df.fillna(0.0, inplace=True)
@@ -202,18 +200,20 @@ if __name__ == "__main__":
     pd.set_option('display.max_rows', None)
     available_options = ['pomofocus', 'pomo_bht', 'git_bht', 'merged_bht']
     import sys
+    from config import load_config
+    pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
     cli_arg = None
     if len(sys.argv) > 1:
         cli_arg = sys.argv[1]
     if cli_arg == 'pomofocus':
-        print(pomofocus_to_df())
+        print(pomofocus_to_df(pomofocus_file))
     elif cli_arg == 'git_all':
         print('gitall')
     elif cli_arg == 'pomo_bht':
-        print(pomo_minutes('bht', pomofocus_to_df()))
+        print(pomo_minutes('bht', pomofocus_to_df(pomofocus_file)))
     elif cli_arg == 'git_bht':
         print(project_to_df('bht'))
     elif cli_arg == 'merged_bht':
-        print(merge_histories('bht'))
+        print(merge_histories('bht', pomofocus_file))
     else:
         print(f"Pass option in [{', '.join(available_options)}]")
