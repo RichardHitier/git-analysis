@@ -18,9 +18,10 @@ class ProjectError(Exception):
 
 
 def repo_to_df(project_git_dir):
-    """ Build a dataframe with one row per commit
-        and columns Date, Day, Hour, Nb_Commit
-        So we can further run analysis, sums, and plot
+    """ From a git repository (.git/ directory)
+        build a dataframe with one row per commit
+        with columns Date, Day, Hour, Nb_Commit
+        so we can further run analysis, sums, and plot
     """
 
     # run git on repo: outputs commits timestamps
@@ -50,7 +51,10 @@ def repo_to_df(project_git_dir):
 
 
 def project_to_df(project_name):
-    """From a project name, concatenate a list of repository
+    """From a project name, retrieve a list of repository
+       and concatenate resulting dataframes
+       see also:
+        - :meth: `repo_to_df()`
     """
     # get the git history, raw
     if project_name not in projects.keys():
@@ -70,6 +74,9 @@ def project_to_df(project_name):
 def daily_commits(project_df):
     """ From the one commit per row dataframe,
         build a new dataframe, indexed by days, with sum of commits per day
+
+        see also:
+            - :meth: `project_to_df)`
     """
 
     project_df = project_df.copy()
@@ -98,8 +105,11 @@ def daily_commits(project_df):
 
 def hours_per_day(project_df):
     """ From The git history dataframe,
-        build a new series with the number of hours worked each day.
+        build a new pd.series with the number of hours worked each day.
         in fact, a delta between last and first commit time for each day.
+
+        see also:
+            - :meth: `project_to_df)`
     """
 
     # day by day, get the min hour, and max hour
@@ -123,6 +133,9 @@ def hours_per_day(project_df):
 
 
 def pomofocus_to_df():
+    """From a pomofocus exported file
+       build the dataframe
+    """
     _df = pd.read_csv(os.path.join(data_dir, 'pomofocus.csv'), header=0, index_col=0, parse_dates=True)
     # read_excel("pomodoros.ods", sheet_name="pomodoros",header=1, index_col=0, parse_dates=True)
     _df.fillna(0, inplace=True)
@@ -134,6 +147,9 @@ def pomofocus_to_df():
 
 
 def pomo_minutes(project_name, _my_df):
+    """From the pomofocus data_frame
+        extract given project minutes df
+    """
     if project_name not in projects.keys():
         raise (ProjectError(f"Wrong project name:{project_name}"))
 
@@ -157,7 +173,7 @@ def pomo_minutes(project_name, _my_df):
 
 def merge_histories(project_name):
     """
-    Merge git history and pomodoro history in one dataframe
+    Merge git and pomodoro histories in one dataframe
 
     :param project_name:
     :return:
@@ -178,3 +194,4 @@ def merge_histories(project_name):
     new_index = pd.date_range(start=res_df.index[0], end=res_df.index[-1])
     res_df = res_df.reindex(new_index)
     return res_df
+
