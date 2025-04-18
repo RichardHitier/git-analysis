@@ -4,20 +4,42 @@ import sys
 import yaml
 
 __all__ = [
-    "projects",
+    "load_projects",
+    "load_config"
 ]
 
 PROJECTS_ROOT_DIR = os.path.dirname(__file__)
 
 projects_filepath = os.path.join(PROJECTS_ROOT_DIR, "projects-config.yml")
-if not os.path.isfile(projects_filepath):
-    print(f"Please set {projects_filepath} config file.")
-    sys.exit()
-with open(projects_filepath) as f:
-    projects = yaml.safe_load(f)
+config_filepath = os.path.join(PROJECTS_ROOT_DIR, "config.yml")
+
+
+def _load_yaml_config(yaml_path=None):
+    try:
+        with open(yaml_path, 'r') as config_file:
+            return yaml.safe_load(config_file)
+    except FileNotFoundError:
+        print(f"Configuration file not found: {yaml_path}")
+        raise
+    except yaml.YAMLError as e:
+        print(f"YAML syntax error: {e}")
+        raise
+
+
+def load_projects(projects_path=projects_filepath):
+    return _load_yaml_config(projects_path)
+
+
+def load_config(config_path=config_filepath):
+    ppt_root_dir = os.path.dirname(__file__)
+    config = _load_yaml_config(config_path)
+    config["POMOFOCUS_FILEPATH"] = os.path.join(ppt_root_dir, config["POMOFOCUS_FILENAME"])
+    config["SUPERPROD_FILEPATH"] = os.path.join(ppt_root_dir, config["SUPERPROD_FILENAME"])
+    return config
+
 
 if __name__ == "__main__":
     from pprint import pprint
 
-    pprint(projects)
-   
+    # pprint(load_projects())
+    pprint(load_config())
