@@ -8,6 +8,7 @@ from flask import redirect, url_for, render_template, request
 from . import bp
 from ..tools.histories import merge_histories, pomofocus_to_df
 from ..tools.plots import plot_df, pom_plot
+from config import load_config
 
 
 @bp.route("/")
@@ -18,6 +19,7 @@ def index():
 @bp.route("/commits/<project_name>", methods=["GET"])
 def commits(project_name):
     from datetime import datetime, timedelta
+    pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
     not_before = request.args.get('not_before')
     not_after = request.args.get('not_after')
     if not_after is None:
@@ -31,7 +33,7 @@ def commits(project_name):
     sooner_date = datetime.date(sooner_date)
     later_date = datetime.date(later_date)
 
-    hits_df = merge_histories(project_name)
+    hits_df = merge_histories(project_name, pomofocus_file)
     hits_df = hits_df.truncate(before=sooner_date, after=later_date)
     new_index = pd.date_range(start=sooner_date, end=later_date, freq='D')
     hits_df = hits_df.reindex(new_index)
@@ -46,7 +48,8 @@ def commits(project_name):
 
 @bp.route("/projects")
 def projects():
-    pom_df = pomofocus_to_df()
+    pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
+    pom_df = pomofocus_to_df(pomofocus_file)
     buf = BytesIO()
     my_fig, p_l = pom_plot(pom_df)
     my_fig.savefig(buf, format="png")
