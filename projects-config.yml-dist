@@ -5,13 +5,18 @@ calipso:
   - /home/richard/01DEV/CalipsoProject/calipso-net-module/.git
   - /home/richard/01DEV/CalipsoProject/.git
   pom_project: CALIPSO
+  superprod_project: Calipso
 bht:
   git_dirs:
+#  - /home/richard/01DEV/bht2/.git
   - /home/richard/01DEV/bht-bulk/.git
   pom_project: BHT
+  superprod_project: bht2
 pro:
   git_dirs: []
   pom_project: PRO
+  superprod_project: pro
 perso:
   git_dirs: []
   pom_project: PERSO
+  superprod_project: perso

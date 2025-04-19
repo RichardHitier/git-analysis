@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import pandas as pd
+import json
 
 import subprocess
 
@@ -169,11 +170,67 @@ def pomo_minutes(project_name, _my_df):
     return _my_df
 
 
-def merge_histories(project_name, pomofocus_file):
+def super_hours(project_name, _my_df):
+    """Extract the hours series from dataframe for the given project"""
+    projects = load_projects()
+    if project_name not in projects.keys():
+        raise (ProjectError(f"Wrong project name:{project_name}"))
+
+    superprod_project = projects[project_name]['superprod_project']
+
+    # 2- extract wanted project only and keep only two columns
+    _my_df = _my_df[_my_df['main_project'] == superprod_project]
+    _my_df = _my_df.super_hours
+
+    # 4- add missing days reindex
+    _my_df.index = pd.to_datetime(_my_df.index)
+    day_first = _my_df.index[0]
+    day_last = _my_df.index[-1]
+    day_idx = pd.date_range(start=day_first, end=day_last, freq='D')
+    _my_df = _my_df.reindex(day_idx, fill_value=0.0)
+
+    return _my_df
+
+
+def superprod_to_df(superprod_file):
+    """From a super-productivity json file,
+        build and return a dataframe
     """
-    Merge git and pomodoro histories in one dataframe
+    def ts_to_date(ts):
+        return datetime.fromtimestamp(ts / 1000).strftime('%Y-%m-%d %H:%M:%S')
+
+    def delta_hours(start_ts, end_ts):
+        if start_ts is not None and end_ts is not None:
+            return round((end_ts - start_ts) / (1000 * 60 * 60), 2)
+        return None
+
+    with open(superprod_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    projects = data['project']['entities']
+    superprod_data = []
+    for project_id, project in projects.items():
+        proj_name = project.get('title', 'unknown')
+        work_start = project.get('workStart', {})
+        work_end = project.get('workEnd', {})
+        for date_str in sorted(work_start.keys()):
+            start_ts = work_start[date_str]
+            end_ts = work_end[date_str]
+            start = ts_to_date(start_ts) if start_ts else 'undefined'
+            end = ts_to_date(end_ts) if end_ts else 'undefined'
+            hours = delta_hours(start_ts, end_ts)
+            superprod_data.append([date_str, proj_name, start, end, hours])
+
+    df = pd.DataFrame(superprod_data, columns=['date', 'main_project', 'start', 'stop', 'super_hours'])
+    df = df.set_index('date')
+    return df
+
+
+def merge_histories(project_name, pomofocus_file, superprod_file):
+    """
+    Merge git, superprod and pomodoro histories in one dataframe
 
     :param pomofocus_file:
+    :param superprod_file:
     :param project_name:
     :return:
     """
@@ -187,6 +244,8 @@ def merge_histories(project_name, pomofocus_file):
         df_to_concat.append(hrs_df)
     minutes_df = pomo_minutes(project_name, pomofocus_to_df(pomofocus_file))
     df_to_concat.append(minutes_df)
+    superhours_df = super_hours(project_name, superprod_to_df(superprod_file))
+    df_to_concat.append(superhours_df)
     res_df = pd.concat(df_to_concat, axis=1)
     res_df.fillna(0.0, inplace=True)
 
@@ -197,22 +256,35 @@ def merge_histories(project_name, pomofocus_file):
 
 if __name__ == "__main__":
     pd.set_option('display.max_rows', None)
-    available_options = ['pomofocus', 'pomo_bht', 'git_bht', 'merged_bht']
+    available_options = ['pomofocus', 'superprod', 'pomo_bht', 'super_bht', 'git_bht', 'daily_bht', 'hours_bht', 'merged_bht']
     import sys
     from config import load_config
+
     pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
+    superprod_file = load_config()["SUPERPROD_FILEPATH"]
     cli_arg = None
     if len(sys.argv) > 1:
         cli_arg = sys.argv[1]
+    if cli_arg not in available_options:
+        print(f"Pass option in [{', '.join(available_options)}]")
+        sys.exit()
     if cli_arg == 'pomofocus':
         print(pomofocus_to_df(pomofocus_file))
+    elif cli_arg == 'superprod':
+        print(superprod_to_df(superprod_file))
+    elif cli_arg == 'super_bht':
+        print(super_hours('bht', superprod_to_df(superprod_file)))
     elif cli_arg == 'git_all':
         print('gitall')
     elif cli_arg == 'pomo_bht':
         print(pomo_minutes('bht', pomofocus_to_df(pomofocus_file)))
     elif cli_arg == 'git_bht':
         print(project_to_df('bht'))
+    elif cli_arg == 'daily_bht':
+        print(daily_commits(project_to_df('bht')))
+    elif cli_arg == 'hours_bht':
+        print(hours_per_day(project_to_df('bht')))
     elif cli_arg == 'merged_bht':
-        print(merge_histories('bht', pomofocus_file))
+        print(merge_histories('bht', pomofocus_file, superprod_file))
     else:
         print(f"Pass option in [{', '.join(available_options)}]")
