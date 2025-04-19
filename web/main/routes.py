@@ -20,6 +20,7 @@ def index():
 def commits(project_name):
     from datetime import datetime, timedelta
     pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
+    superprod_file = load_config()["SUPERPROD_FILEPATH"]
     not_before = request.args.get('not_before')
     not_after = request.args.get('not_after')
     if not_after is None:
@@ -33,7 +34,7 @@ def commits(project_name):
     sooner_date = datetime.date(sooner_date)
     later_date = datetime.date(later_date)
 
-    hits_df = merge_histories(project_name, pomofocus_file)
+    hits_df = merge_histories(project_name, pomofocus_file, superprod_file)
     hits_df = hits_df.truncate(before=sooner_date, after=later_date)
     new_index = pd.date_range(start=sooner_date, end=later_date, freq='D')
     hits_df = hits_df.reindex(new_index)

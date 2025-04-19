@@ -180,7 +180,7 @@ def super_hours(project_name, _my_df):
 
     # 2- extract wanted project only and keep only two columns
     _my_df = _my_df[_my_df['main_project'] == superprod_project]
-    _my_df = _my_df.hours
+    _my_df = _my_df.super_hours
 
     # 4- add missing days reindex
     _my_df.index = pd.to_datetime(_my_df.index)
@@ -220,7 +220,7 @@ def superprod_to_df(superprod_file):
             hours = delta_hours(start_ts, end_ts)
             superprod_data.append([date_str, proj_name, start, end, hours])
 
-    df = pd.DataFrame(superprod_data, columns=['date', 'main_project', 'start', 'stop', 'hours'])
+    df = pd.DataFrame(superprod_data, columns=['date', 'main_project', 'start', 'stop', 'super_hours'])
     df = df.set_index('date')
     return df
 

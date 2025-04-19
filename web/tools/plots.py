@@ -19,7 +19,7 @@ def plot_df(_df):
 
     _df = _df.reindex(pd_dr)
 
-    fig, ax = plt.subplots(3, figsize=(20, 8), sharex=True)
+    fig, ax = plt.subplots(4, figsize=(20, 8), sharex=True)
 
     # ax[0].tick_params(axis='x', labelsize=10, rotation=30)
     # ax[2].xaxis.set_major_formatter(mdates.DateFormatter(date_format))
@@ -28,20 +28,26 @@ def plot_df(_df):
     # ax[2].set_xticks(pd_dr)
 
     try:
-        ax[0].set_title("Number of Commits per day")
-        bc = ax[0].bar(pd_dr, _df.nb_commits, color="red", width=0.8, edgecolor="black")
+        ax[0].set_title("Git Commits per day")
+        bc = ax[0].bar(pd_dr, _df.nb_commits, color="#bf0a30", width=0.8, edgecolor="black")
     except AttributeError:
         pass
 
     try:
-        ax[1].set_title("Worked hours per day")
-        cbc = ax[1].bar(pd_dr, _df.duration_hour, color="blue", width=0.8, edgecolor="black")
+        ax[1].set_title("Git hours per day")
+        cbc = ax[1].bar(pd_dr, _df.duration_hour, color="#0f52ba", width=0.8, edgecolor="black")
     except AttributeError:
         pass
 
     try:
         ax[2].set_title("Pomodoros per day")
         pbc = ax[2].bar(pd_dr, _df.minutes, width=0.5)
+    except AttributeError:
+        pass
+
+    try:
+        ax[3].set_title("Super-productivity hours")
+        pbc = ax[3].bar(pd_dr, _df.super_hours, width=0.5, color="#fee12b", edgecolor="#3e424b")
     except AttributeError:
         pass
 
