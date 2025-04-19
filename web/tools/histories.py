@@ -244,6 +244,8 @@ def merge_histories(project_name, pomofocus_file, superprod_file):
         df_to_concat.append(hrs_df)
     minutes_df = pomo_minutes(project_name, pomofocus_to_df(pomofocus_file))
     df_to_concat.append(minutes_df)
+    superhours_df = super_hours(project_name, superprod_to_df(superprod_file))
+    df_to_concat.append(superhours_df)
     res_df = pd.concat(df_to_concat, axis=1)
     res_df.fillna(0.0, inplace=True)
 
@@ -283,6 +285,6 @@ if __name__ == "__main__":
     elif cli_arg == 'hours_bht':
         print(hours_per_day(project_to_df('bht')))
     elif cli_arg == 'merged_bht':
-        print(merge_histories('bht', pomofocus_file))
+        print(merge_histories('bht', pomofocus_file, superprod_file))
     else:
         print(f"Pass option in [{', '.join(available_options)}]")
