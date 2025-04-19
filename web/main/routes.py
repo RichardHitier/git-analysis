@@ -6,7 +6,7 @@ from dateutil import parser
 from flask import redirect, url_for, render_template, request
 
 from . import bp
-from ..tools.histories import merge_histories, pomofocus_to_df
+from ..tools.histories import merge_histories, pomofocus_to_df, superprod_to_df
 from ..tools.plots import plot_df, pom_plot
 from config import load_config
 
@@ -51,8 +51,10 @@ def commits(project_name):
 def projects():
     pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
     pom_df = pomofocus_to_df(pomofocus_file)
+    superprod_file = load_config()["SUPERPROD_FILEPATH"]
+    super_df = superprod_to_df(superprod_file)
     buf = BytesIO()
-    my_fig, p_l = pom_plot(pom_df)
+    my_fig, p_l = pom_plot(pom_df, super_df)
     my_fig.savefig(buf, format="png")
     img_data = base64.b64encode(buf.getbuffer()).decode("ascii")
     return render_template("projects.html", projects=p_l, img_data=img_data)
