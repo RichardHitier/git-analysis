@@ -197,10 +197,13 @@ def merge_histories(project_name, pomofocus_file):
 
 if __name__ == "__main__":
     pd.set_option('display.max_rows', None)
-    available_options = ['pomofocus', 'pomo_bht', 'git_bht', 'merged_bht']
+    available_options = ['pomofocus', 'pomo_bht', 'git_bht', 'daily_bht', 'hours_bht', 'merged_bht']
     import sys
     from config import load_config
+    now = datetime.now()
     pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
+    then = datetime.now()
+    print(then - now)
     cli_arg = None
     if len(sys.argv) > 1:
         cli_arg = sys.argv[1]
@@ -212,6 +215,10 @@ if __name__ == "__main__":
         print(pomo_minutes('bht', pomofocus_to_df(pomofocus_file)))
     elif cli_arg == 'git_bht':
         print(project_to_df('bht'))
+    elif cli_arg == 'daily_bht':
+        print(daily_commits(project_to_df('bht')))
+    elif cli_arg == 'hours_bht':
+        print(hours_per_day(project_to_df('bht')))
     elif cli_arg == 'merged_bht':
         print(merge_histories('bht', pomofocus_file))
     else:

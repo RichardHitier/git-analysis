@@ -1,6 +1,6 @@
-
 import json
 from datetime import datetime
+from config import load_config
 
 # Fonction pour convertir timestamp en date lisible
 def ts_to_date(ts):
@@ -13,7 +13,8 @@ def delta_hours(start_ts, end_ts):
     return None
 
 # Chargement du fichier JSON
-with open('super_productivity_20250417.json', 'r', encoding='utf-8') as f:
+superprod_file = load_config()["SUPERPROD_FILEPATH"]
+with open(superprod_file, 'r', encoding='utf-8') as f:
     data = json.load(f)
 
 # Extraction des projets
