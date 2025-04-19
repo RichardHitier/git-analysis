@@ -170,7 +170,32 @@ def pomo_minutes(project_name, _my_df):
     return _my_df
 
 
+def super_hours(project_name, _my_df):
+    """Extract the hours series from dataframe for the given project"""
+    projects = load_projects()
+    if project_name not in projects.keys():
+        raise (ProjectError(f"Wrong project name:{project_name}"))
+
+    superprod_project = projects[project_name]['superprod_project']
+
+    # 2- extract wanted project only and keep only two columns
+    _my_df = _my_df[_my_df['main_project'] == superprod_project]
+    _my_df = _my_df.hours
+
+    # 4- add missing days reindex
+    _my_df.index = pd.to_datetime(_my_df.index)
+    day_first = _my_df.index[0]
+    day_last = _my_df.index[-1]
+    day_idx = pd.date_range(start=day_first, end=day_last, freq='D')
+    _my_df = _my_df.reindex(day_idx, fill_value=0.0)
+
+    return _my_df
+
+
 def superprod_to_df(superprod_file):
+    """From a super-productivity json file,
+        build and return a dataframe
+    """
     def ts_to_date(ts):
         return datetime.fromtimestamp(ts / 1000).strftime('%Y-%m-%d %H:%M:%S')
 
@@ -192,19 +217,20 @@ def superprod_to_df(superprod_file):
             end_ts = work_end[date_str]
             start = ts_to_date(start_ts) if start_ts else 'undefined'
             end = ts_to_date(end_ts) if end_ts else 'undefined'
-            delta = delta_hours(start_ts, end_ts)
-            superprod_data.append([ date_str,proj_name,start,end,delta])
+            hours = delta_hours(start_ts, end_ts)
+            superprod_data.append([date_str, proj_name, start, end, hours])
 
-    df = pd.DataFrame(superprod_data, columns=['date', 'main_project', 'start', 'stop', 'delta_hours'])
+    df = pd.DataFrame(superprod_data, columns=['date', 'main_project', 'start', 'stop', 'hours'])
     df = df.set_index('date')
     return df
 
 
-def merge_histories(project_name, pomofocus_file):
+def merge_histories(project_name, pomofocus_file, superprod_file):
     """
-    Merge git and pomodoro histories in one dataframe
+    Merge git, superprod and pomodoro histories in one dataframe
 
     :param pomofocus_file:
+    :param superprod_file:
     :param project_name:
     :return:
     """
@@ -228,7 +254,7 @@ def merge_histories(project_name, pomofocus_file):
 
 if __name__ == "__main__":
     pd.set_option('display.max_rows', None)
-    available_options = ['pomofocus', 'superprod', 'pomo_bht', 'git_bht', 'daily_bht', 'hours_bht', 'merged_bht']
+    available_options = ['pomofocus', 'superprod', 'pomo_bht', 'super_bht', 'git_bht', 'daily_bht', 'hours_bht', 'merged_bht']
     import sys
     from config import load_config
 
@@ -243,8 +269,9 @@ if __name__ == "__main__":
     if cli_arg == 'pomofocus':
         print(pomofocus_to_df(pomofocus_file))
     elif cli_arg == 'superprod':
-        from pprint import pprint
-        pprint(superprod_to_df(superprod_file))
+        print(superprod_to_df(superprod_file))
+    elif cli_arg == 'super_bht':
+        print(super_hours('bht', superprod_to_df(superprod_file)))
     elif cli_arg == 'git_all':
         print('gitall')
     elif cli_arg == 'pomo_bht':
