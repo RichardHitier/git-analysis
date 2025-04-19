@@ -1,5 +1,8 @@
 import json
+import sys
 from datetime import datetime
+from pprint import pprint
+
 from config import load_config
 
 # Fonction pour convertir timestamp en date lisible
@@ -19,7 +22,9 @@ with open(superprod_file, 'r', encoding='utf-8') as f:
 
 # Extraction des projets
 projects = data['project']['entities']
+pprint(projects)
 
+# sys.exit()
 # Parcours et affichage des infos demandées
 for project_id, project in projects.items():
     title = project.get('title', 'Sans titre')

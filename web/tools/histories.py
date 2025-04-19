@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import pandas as pd
+import json
 
 import subprocess
 
@@ -169,6 +170,36 @@ def pomo_minutes(project_name, _my_df):
     return _my_df
 
 
+def superprod_to_df(superprod_file):
+    def ts_to_date(ts):
+        return datetime.fromtimestamp(ts / 1000).strftime('%Y-%m-%d %H:%M:%S')
+
+    def delta_hours(start_ts, end_ts):
+        if start_ts is not None and end_ts is not None:
+            return round((end_ts - start_ts) / (1000 * 60 * 60), 2)
+        return None
+
+    with open(superprod_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    projects = data['project']['entities']
+    superprod_data = []
+    for project_id, project in projects.items():
+        proj_name = project.get('title', 'unknown')
+        work_start = project.get('workStart', {})
+        work_end = project.get('workEnd', {})
+        for date_str in sorted(work_start.keys()):
+            start_ts = work_start[date_str]
+            end_ts = work_end[date_str]
+            start = ts_to_date(start_ts) if start_ts else 'undefined'
+            end = ts_to_date(end_ts) if end_ts else 'undefined'
+            delta = delta_hours(start_ts, end_ts)
+            superprod_data.append([ date_str,proj_name,start,end,delta])
+
+    df = pd.DataFrame(superprod_data, columns=['date', 'main_project', 'start', 'stop', 'delta_hours'])
+    df = df.set_index('date')
+    return df
+
+
 def merge_histories(project_name, pomofocus_file):
     """
     Merge git and pomodoro histories in one dataframe
@@ -197,18 +228,23 @@ def merge_histories(project_name, pomofocus_file):
 
 if __name__ == "__main__":
     pd.set_option('display.max_rows', None)
-    available_options = ['pomofocus', 'pomo_bht', 'git_bht', 'daily_bht', 'hours_bht', 'merged_bht']
+    available_options = ['pomofocus', 'superprod', 'pomo_bht', 'git_bht', 'daily_bht', 'hours_bht', 'merged_bht']
     import sys
     from config import load_config
-    now = datetime.now()
+
     pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
-    then = datetime.now()
-    print(then - now)
+    superprod_file = load_config()["SUPERPROD_FILEPATH"]
     cli_arg = None
     if len(sys.argv) > 1:
         cli_arg = sys.argv[1]
+    if cli_arg not in available_options:
+        print(f"Pass option in [{', '.join(available_options)}]")
+        sys.exit()
     if cli_arg == 'pomofocus':
         print(pomofocus_to_df(pomofocus_file))
+    elif cli_arg == 'superprod':
+        from pprint import pprint
+        pprint(superprod_to_df(superprod_file))
     elif cli_arg == 'git_all':
         print('gitall')
     elif cli_arg == 'pomo_bht':
