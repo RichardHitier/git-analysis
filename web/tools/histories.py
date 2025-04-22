@@ -74,7 +74,7 @@ def daily_commits(project_df):
         build a new dataframe, indexed by days, with sum of commits per day
 
         see also:
-            - :meth: `project_to_df)`
+            - :meth: `project_to_df`
     """
 
     project_df = project_df.copy()
@@ -107,7 +107,7 @@ def hours_per_day(project_df):
         in fact, a delta between last and first commit time for each day.
 
         see also:
-            - :meth: `project_to_df)`
+            - :meth: `project_to_df`
     """
 
     # day by day, get the min hour, and max hour
