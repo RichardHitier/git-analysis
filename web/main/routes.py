@@ -53,8 +53,11 @@ def projects():
     pom_df = pomofocus_to_df(pomofocus_file)
     superprod_file = load_config()["SUPERPROD_FILEPATH"]
     super_df = superprod_to_df(superprod_file)
+    webprod_file = load_config()["WEBPROD_FILEPATH"]
+    web_df = superprod_to_df(webprod_file)
+
     buf = BytesIO()
-    my_fig, p_l = pom_plot(pom_df, super_df)
+    my_fig, p_l = pom_plot(pom_df, super_df, web_df)
     my_fig.savefig(buf, format="png")
     img_data = base64.b64encode(buf.getbuffer()).decode("ascii")
     return render_template("projects.html", projects=p_l, img_data=img_data)
