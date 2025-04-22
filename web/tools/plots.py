@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 
 from datetime import date, timedelta, datetime
 
-from web.tools.histories import pomo_minutes, pomofocus_to_df, super_hours
+from web.tools.histories import pomo_minutes, pomofocus_to_df, super_hours, superprod_to_df
 from config import load_config, load_projects
 
 
@@ -85,12 +85,9 @@ if __name__ == "__main__":
     # df = merge_histories("pro")
     pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
     pom_df = pomofocus_to_df(pomofocus_file)
-    # print(pom_df.minutes)
-    # _df = pomo_minutes("bht", pom_df)
+    superprod_file = load_config()["SUPERPROD_FILEPATH"]
+    super_df = superprod_to_df(superprod_file)
 
-    # my_fig = plot_df(_df)
-
-    my_fig, p_l = pom_plot(pom_df)
-    # my_fig.show()
+    my_fig, p_l = pom_plot(pom_df, super_df)
 
     plt.show()
