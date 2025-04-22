@@ -176,10 +176,10 @@ def super_hours(project_name, _my_df):
     if project_name not in projects.keys():
         raise (ProjectError(f"Wrong project name:{project_name}"))
 
-    superprod_project = projects[project_name]['superprod_project']
+    superprod_projects = projects[project_name]['superprod_projects']
 
     # 2- extract wanted project only and keep only two columns
-    _my_df = _my_df[_my_df['main_project'] == superprod_project]
+    _my_df = _my_df[_my_df['main_project'].isin( superprod_projects)]
     _my_df = _my_df.super_hours
 
     # 4- add missing days reindex
