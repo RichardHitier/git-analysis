@@ -43,8 +43,8 @@ def test_pomo_minutes(pomofocus_file):
     assert True
 
 
-def test_merge_histories(pomofocus_file):
-    df = merge_histories("calipso", pomofocus_file)
+def test_merge_histories(pomofocus_file, superprod_file):
+    df = merge_histories("calipso", pomofocus_file, superprod_file)
     import pandas as pd
     pd.set_option('display.max_rows', None)
     print(df)
