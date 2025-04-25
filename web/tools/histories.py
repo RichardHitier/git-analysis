@@ -254,10 +254,11 @@ def merge_histories(project_name, pomofocus_file, superprod_file):
     return res_df
 
 
-def merge_all_histories(pomo_df, superprod_df):
+def merge_all_histories(pomo_df, superprod_df, superweb_df):
     """
     Aggregates Git, Pomofocus et SuperProductivity pour all projects
 
+    :param superweb_df:
     :param superprod_df:
     :param pomo_df:
     :return: merged dataframe
@@ -292,7 +293,10 @@ def merge_all_histories(pomo_df, superprod_df):
                 super_hours_df = super_hours(project, superprod_df)
                 super_hours_df = super_hours_df.to_frame(name="super_hours")
                 super_hours_df["project"] = project
-                all_df_list.append(super_hours_df)
+                web_hours_df = super_hours(project, superweb_df)
+                web_hours_df = web_hours_df.to_frame(name="web_hours")
+                web_hours_df["project"] = project
+                all_df_list.extend([super_hours_df, web_hours_df])
             except Exception as e:
                 print(f"[SuperProductivity] {project}: {e}")
 
@@ -309,7 +313,7 @@ def merge_all_histories(pomo_df, superprod_df):
     # Global reindex
     merged_df.index = pd.to_datetime(merged_df.index)
     columns = ['project', 'git_commits', 'git_hours', 'git_days', 'pomo_minutes',
-               'super_hours']
+               'super_hours', 'web_hours']
     merged_df = merged_df[columns]
     return merged_df.sort_index()
 
@@ -323,6 +327,7 @@ if __name__ == "__main__":
 
     pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
     superprod_file = load_config()["SUPERPROD_FILEPATH"]
+    webprod_file = load_config()["WEBPROD_FILEPATH"]
     cli_arg = None
     if len(sys.argv) > 1:
         cli_arg = sys.argv[1]
@@ -348,7 +353,8 @@ if __name__ == "__main__":
     elif cli_arg == 'merged_bht':
         print(merge_histories('bht', pomofocus_file, superprod_file))
     elif cli_arg == 'merged_all':
-        df = merge_all_histories(pomofocus_to_df(pomofocus_file), superprod_to_df(superprod_file))
+        df = merge_all_histories(pomofocus_to_df(pomofocus_file), superprod_to_df(superprod_file),
+                                 superprod_to_df(webprod_file))
         print(df.columns)
         print(len(df))
     else:
