@@ -353,9 +353,11 @@ if __name__ == "__main__":
     elif cli_arg == 'merged_bht':
         print(merge_histories('bht', pomofocus_file, superprod_file))
     elif cli_arg == 'merged_all':
-        df = merge_all_histories(pomofocus_to_df(pomofocus_file), superprod_to_df(superprod_file),
+        all_df = merge_all_histories(pomofocus_to_df(pomofocus_file), superprod_to_df(superprod_file),
                                  superprod_to_df(webprod_file))
-        print(df.columns)
-        print(len(df))
+        print(all_df.columns)
+        print(len(all_df))
+        all_df = all_df.truncate(before='20250101')
+        print(all_df)
     else:
         print(f"Pass option in [{', '.join(available_options)}]")

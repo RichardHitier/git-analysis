@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 
 from datetime import date, timedelta, datetime
 
-from web.tools.histories import pomo_minutes, pomofocus_to_df, super_hours, superprod_to_df
+from web.tools.histories import pomo_minutes, pomofocus_to_df, super_hours, superprod_to_df, merge_all_histories
 from config import load_config, load_projects
 
 
@@ -73,10 +73,10 @@ def pom_plot(pom_df, super_df, web_df=None):
         ax.set_ylabel("minutes")
         p_df = pomo_minutes(project_name, pom_df)
         pbc = ax.bar(p_df.index, p_df, width=0.7, color='#89cfef', label='Pomodoro', edgecolor="black", linewidth=0.2)
-        s_df = super_hours(project_name, super_df)*60
+        s_df = super_hours(project_name, super_df) * 60
         sbc = ax.bar(s_df.index, s_df, width=0.7, color='#fee12b', label='Super', edgecolor="black", linewidth=0.2)
         if web_df is not None:
-            w_df = super_hours(project_name, web_df)*60
+            w_df = super_hours(project_name, web_df) * 60
             wbc = ax.bar(w_df.index, w_df, width=0.7, color='#ffd6ff', label='Web', edgecolor="black", linewidth=0.2)
         today = datetime.now().date()
         ax.axvline(x=today, color='red', linestyle='--', linewidth=1)
@@ -84,8 +84,33 @@ def pom_plot(pom_df, super_df, web_df=None):
     return fig, projects
 
 
+def all_plot(all_projects_df):
+    projects = load_projects()
+
+    fig, axs = plt.subplots(len(projects),
+                            figsize=(20, 8),
+                            sharex=True,
+                            sharey=True)
+
+    for i, project_name in enumerate(projects):
+        ax = axs[i]
+        ax.set_title(f"Project: {project_name}", y=1.1, pad=-25.0, loc="center")
+        ax.set_ylabel("minutes")
+        project_df = all_projects_df[all_projects_df['project'] == project_name]
+        p_df = project_df.pomo_minutes
+        s_df = project_df.super_hours*60
+        w_df = project_df.web_hours*60
+
+        pbc = ax.bar(p_df.index, p_df, width=0.7, color='#89cfef', label='Pomodoro', edgecolor="black", linewidth=0.2)
+        sbc = ax.bar(s_df.index, s_df, width=0.7, color='#fee12b', label='Super', edgecolor="black", linewidth=0.2)
+        wbc = ax.bar(w_df.index, w_df, width=0.7, color='#ffd6ff', label='Web', edgecolor="black", linewidth=0.2)
+        today = datetime.now().date()
+        ax.axvline(x=today, color='red', linestyle='--', linewidth=1)
+
+    return fig, projects
+
+
 if __name__ == "__main__":
-    # df = merge_histories("pro")
     pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
     pom_df = pomofocus_to_df(pomofocus_file)
     superprod_file = load_config()["SUPERPROD_FILEPATH"]
@@ -93,6 +118,9 @@ if __name__ == "__main__":
     webprod_file = load_config()["WEBPROD_FILEPATH"]
     web_df = superprod_to_df(webprod_file)
 
-    my_fig, p_l = pom_plot(pom_df, super_df, web_df)
+    all_df = merge_all_histories(pom_df, super_df, web_df)
+    all_df = all_df.truncate(before='20250101')
+    my_fig, p_l = all_plot(all_df)
+    # my_fig, p_l = pom_plot(pom_df, super_df, web_df)
 
     plt.show()

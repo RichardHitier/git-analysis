@@ -6,8 +6,8 @@ from dateutil import parser
 from flask import redirect, url_for, render_template, request
 
 from . import bp
-from ..tools.histories import merge_histories, pomofocus_to_df, superprod_to_df
-from ..tools.plots import plot_df, pom_plot
+from ..tools.histories import merge_histories, pomofocus_to_df, superprod_to_df, merge_all_histories
+from ..tools.plots import plot_df, pom_plot, all_plot
 from config import load_config
 
 
@@ -16,11 +16,8 @@ def index():
     return redirect(url_for("main.projects"))
 
 
-@bp.route("/commits/<project_name>", methods=["GET"])
-def commits(project_name):
+def sooner_or_later(request):
     from datetime import datetime, timedelta
-    pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
-    superprod_file = load_config()["SUPERPROD_FILEPATH"]
     not_before = request.args.get('not_before')
     not_after = request.args.get('not_after')
     if not_after is None:
@@ -33,7 +30,14 @@ def commits(project_name):
         sooner_date = parser.parse(not_before)
     sooner_date = datetime.date(sooner_date)
     later_date = datetime.date(later_date)
+    return sooner_date, later_date
 
+
+@bp.route("/commits/<project_name>", methods=["GET"])
+def commits(project_name):
+    pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
+    superprod_file = load_config()["SUPERPROD_FILEPATH"]
+    sooner_date, later_date = sooner_or_later(request)
     hits_df = merge_histories(project_name, pomofocus_file, superprod_file)
     hits_df = hits_df.truncate(before=sooner_date, after=later_date)
     new_index = pd.date_range(start=sooner_date, end=later_date, freq='D')
@@ -56,8 +60,13 @@ def projects():
     webprod_file = load_config()["WEBPROD_FILEPATH"]
     web_df = superprod_to_df(webprod_file)
 
+    sooner_date, later_date = sooner_or_later(request)
+
+    all_df = merge_all_histories(pom_df, super_df, web_df)
+    all_df = all_df.truncate(before=sooner_date, after=later_date)
+    my_fig, p_l = all_plot(all_df)
+    # my_fig, p_l = pom_plot(pom_df, super_df, web_df)
     buf = BytesIO()
-    my_fig, p_l = pom_plot(pom_df, super_df, web_df)
     my_fig.savefig(buf, format="png")
     img_data = base64.b64encode(buf.getbuffer()).decode("ascii")
     return render_template("projects.html", projects=p_l, img_data=img_data)
