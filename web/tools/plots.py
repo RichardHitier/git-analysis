@@ -63,31 +63,6 @@ def plot_df(_df):
     return fig
 
 
-def pom_plot(pom_df, super_df, web_df=None):
-    projects = load_projects()
-
-    fig, axs = plt.subplots(len(projects),
-                            figsize=(20, 8),
-                            sharex=True,
-                            sharey=True)
-
-    for i, project_name in enumerate(projects):
-        ax = axs[i]
-        ax.set_title(f"Project: {project_name}", y=1.1, pad=-25.0, loc="center")
-        ax.set_ylabel("minutes")
-        p_df = pomo_minutes(project_name, pom_df)
-        pbc = ax.bar(p_df.index, p_df, width=0.7, color='#89cfef', label='Pomodoro', edgecolor="black", linewidth=0.2)
-        s_df = super_hours(project_name, super_df) * 60
-        sbc = ax.bar(s_df.index, s_df, width=0.7, color='#fee12b', label='Super', edgecolor="black", linewidth=0.2)
-        if web_df is not None:
-            w_df = super_hours(project_name, web_df) * 60
-            wbc = ax.bar(w_df.index, w_df, width=0.7, color='#ffd6ff', label='Web', edgecolor="black", linewidth=0.2)
-        today = datetime.now().date()
-        ax.axvline(x=today, color='red', linestyle='--', linewidth=1)
-
-    return fig, projects
-
-
 def all_plot(all_projects_df):
     all_projects_df = all_projects_df.replace(0.0, float('nan'))
     projects = load_projects()
