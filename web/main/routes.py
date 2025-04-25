@@ -6,6 +6,7 @@ from dateutil import parser
 from flask import redirect, url_for, render_template, request
 
 from . import bp
+from ..tools.data_cache import get_cached_histories
 from ..tools.histories import merge_histories, pomofocus_to_df, superprod_to_df, merge_all_histories
 from ..tools.plots import plot_df, pom_plot, all_plot
 from config import load_config
@@ -62,10 +63,9 @@ def projects():
 
     sooner_date, later_date = sooner_or_later(request)
 
-    all_df = merge_all_histories(pom_df, super_df, web_df)
+    all_df = get_cached_histories()
     all_df = all_df.truncate(before=sooner_date, after=later_date)
     my_fig, p_l = all_plot(all_df)
-    # my_fig, p_l = pom_plot(pom_df, super_df, web_df)
     buf = BytesIO()
     my_fig.savefig(buf, format="png")
     img_data = base64.b64encode(buf.getbuffer()).decode("ascii")

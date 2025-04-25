@@ -1,4 +1,8 @@
 import pandas as pd
+
+import matplotlib
+
+matplotlib.use("Agg")  # <- backend non-GUI
 from matplotlib import pyplot as plt
 
 from datetime import date, timedelta, datetime
@@ -100,8 +104,8 @@ def all_plot(all_projects_df):
         project_df = all_projects_df[all_projects_df['project'] == project_name]
         g_df = project_df.git_commits
         p_df = project_df.pomo_minutes
-        s_df = project_df.super_hours*60
-        w_df = project_df.web_hours*60
+        s_df = project_df.super_hours * 60
+        w_df = project_df.web_hours * 60
 
         ax2 = ax.twinx()  # instantiate a second axes that shares the same x-axis
         ax2.set_ylim([-5, 30])
