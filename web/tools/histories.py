@@ -179,7 +179,7 @@ def super_hours(project_name, _my_df):
     superprod_projects = projects[project_name]['superprod_projects']
 
     # 2- extract wanted project only and keep only two columns
-    _my_df = _my_df[_my_df['main_project'].isin( superprod_projects)]
+    _my_df = _my_df[_my_df['main_project'].isin(superprod_projects)]
     _my_df = _my_df.super_hours
 
     # 4- add missing days reindex
@@ -196,6 +196,7 @@ def superprod_to_df(superprod_file):
     """From a super-productivity json file,
         build and return a dataframe
     """
+
     def ts_to_date(ts):
         return datetime.fromtimestamp(ts / 1000).strftime('%Y-%m-%d %H:%M:%S')
 
@@ -227,7 +228,7 @@ def superprod_to_df(superprod_file):
 
 def merge_histories(project_name, pomofocus_file, superprod_file):
     """
-    Merge git, superprod and pomodoro histories in one dataframe
+    Merge git, superproductivity and pomodoro histories in one dataframe
 
     :param pomofocus_file:
     :param superprod_file:
@@ -254,9 +255,67 @@ def merge_histories(project_name, pomofocus_file, superprod_file):
     return res_df
 
 
+def merge_all_histories(pomo_df, superprod_df):
+    """
+    Aggregates Git, Pomofocus et SuperProductivity pour all projects
+
+    :param superprod_df:
+    :param pomo_df:
+    :return: merged dataframe
+    """
+    all_projects = load_projects().keys()
+    all_df_list = []
+
+    for project in all_projects:
+        try:
+            # Git
+            try:
+                git_df = project_to_df(project)
+                dly_df = daily_commits(git_df)
+                hrs_df = hours_per_day(git_df)
+                dly_df["project"] = project
+                hrs_df["project"] = project
+                all_df_list.extend([dly_df, hrs_df])
+            except Exception as e:
+                print(f"[Git] {project}: {e}")
+
+            # Pomofocus
+            try:
+                pomo_minutes_df = pomo_minutes(project, pomo_df)
+                pomo_minutes_df = pomo_minutes_df.to_frame(name="pomo_minutes")
+                pomo_minutes_df["project"] = project
+                all_df_list.append(pomo_minutes_df)
+            except Exception as e:
+                print(f"[Pomofocus] {project}: {e}")
+
+            # SuperProductivity
+            try:
+                super_hours_df = super_hours(project, superprod_df)
+                super_hours_df = super_hours_df.to_frame(name="super_hours")
+                super_hours_df["project"] = project
+                all_df_list.append(super_hours_df)
+            except Exception as e:
+                print(f"[SuperProductivity] {project}: {e}")
+
+        except Exception as global_err:
+            print(f"[Global error] {project}: {global_err}")
+
+    if not all_df_list:
+        raise RuntimeError("No data collected.")
+
+    # Concatenate
+    merged_df = pd.concat(all_df_list)
+    merged_df.fillna(0.0, inplace=True)
+
+    # Global reindex
+    merged_df.index = pd.to_datetime(merged_df.index)
+    return merged_df.sort_index()
+
+
 if __name__ == "__main__":
     pd.set_option('display.max_rows', None)
-    available_options = ['pomofocus', 'superprod', 'pomo_bht', 'super_bht', 'git_bht', 'daily_bht', 'hours_bht', 'merged_bht']
+    available_options = ['pomofocus', 'superprod', 'pomo_bht', 'super_bht', 'git_bht',
+                         'daily_bht', 'hours_bht', 'merged_all', 'merged_bht']
     import sys
     from config import load_config
 
@@ -285,6 +344,10 @@ if __name__ == "__main__":
     elif cli_arg == 'hours_bht':
         print(hours_per_day(project_to_df('bht')))
     elif cli_arg == 'merged_bht':
-        print(merge_histories('bht', pomofocus_file, superprod_file))
+        print(merge_histories('bht',pomofocus_file, superprod_file))
+    elif cli_arg == 'merged_all':
+        df = merge_all_histories(pomofocus_to_df(pomofocus_file), superprod_to_df(superprod_file))
+        print(df.columns)
+        print(len(df))
     else:
         print(f"Pass option in [{', '.join(available_options)}]")
