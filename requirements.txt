@@ -5,3 +5,5 @@ flask
 scipy
 python-dateutil
 PyYAML
+pyarrow
+fastparquet
