@@ -45,8 +45,10 @@ def commits(project_name):
     hits_fig.savefig(buf, format="png")
     # Embed the result in the html output.
     img_data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    hits_df.fillna(0.0, inplace=True)
+    cols_to_check = hits_df.columns.difference(["project"])
+    hits_df = hits_df.loc[~(hits_df[cols_to_check] == 0.0).all(axis=1)]
     return render_template("commits.html", hits=hits_df.to_html(), img_data=img_data)
-
 
 @bp.route("/projects")
 def projects():
