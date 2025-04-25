@@ -85,6 +85,7 @@ def pom_plot(pom_df, super_df, web_df=None):
 
 
 def all_plot(all_projects_df):
+    all_projects_df = all_projects_df.replace(0.0, float('nan'))
     projects = load_projects()
 
     fig, axs = plt.subplots(len(projects),
@@ -101,9 +102,9 @@ def all_plot(all_projects_df):
         s_df = project_df.super_hours*60
         w_df = project_df.web_hours*60
 
-        pbc = ax.bar(p_df.index, p_df, width=0.7, color='#89cfef', label='Pomodoro', edgecolor="black", linewidth=0.2)
-        sbc = ax.bar(s_df.index, s_df, width=0.7, color='#fee12b', label='Super', edgecolor="black", linewidth=0.2)
-        wbc = ax.bar(w_df.index, w_df, width=0.7, color='#ffd6ff', label='Web', edgecolor="black", linewidth=0.2)
+        pbc = ax.bar(p_df.index, p_df, width=0.5, color='#89cfef', label='Pomodoro', edgecolor="black", linewidth=0.2)
+        sbc = ax.bar(s_df.index, s_df, width=0.5, color='#fee12b', label='Super', edgecolor="black", linewidth=0.2)
+        wbc = ax.bar(w_df.index, w_df, width=0.5, color='#ffd6ff', label='Web', edgecolor="black", linewidth=0.2)
         today = datetime.now().date()
         ax.axvline(x=today, color='red', linestyle='--', linewidth=1)
 
@@ -123,4 +124,7 @@ if __name__ == "__main__":
     my_fig, p_l = all_plot(all_df)
     # my_fig, p_l = pom_plot(pom_df, super_df, web_df)
 
-    plt.show()
+    # plt.show()
+    image_filename = "all_projects_2025.png"
+    my_fig.savefig(image_filename)
+    print(f"Saved to {image_filename}")
