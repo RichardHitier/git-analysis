@@ -12,47 +12,34 @@ from config import load_config, load_projects
 
 
 def plot_df(_df):
-    date_format = '%d %b'
-
-    # get current month day
-    today = date.today()
-
-    month_before = today - timedelta(days=65)
-    month_after = today + timedelta(days=30)
-
-    pd_dr = pd.date_range(start=month_before, end=month_after, freq="D")
-
-    _df = _df.reindex(pd_dr)
 
     fig, ax = plt.subplots(4, figsize=(20, 8), sharex=True)
 
-    # ax[0].tick_params(axis='x', labelsize=10, rotation=30)
-    # ax[2].xaxis.set_major_formatter(mdates.DateFormatter(date_format))
-    # ax[2].tick_params(axis='x', labelsize=10, rotation=30)
-    # ax[1].tick_params(axis='x', labelsize=10, rotation=30)
-    # ax[2].set_xticks(pd_dr)
-
     try:
         ax[0].set_title("Git Commits per day")
-        cbc = ax[0].bar(pd_dr, _df.git_commits, color="#bf0a30", width=0.6, edgecolor="black")
+        ax[0].set_ylim([-5, 30])
+        ax[0].plot(_df.index, _df.git_commits.interpolate(method="spline", order=3), color="#bf0a30", lw=2, zorder=-4)
+        ax[0].scatter(_df.index, _df.git_commits, marker="*", zorder=3, color="lightgreen", edgecolor="black", lw=0.5, s=50)
+        # cbc = ax[0].bar(_df.index, _df.git_commits, color="#0f52ba", width=0.6, edgecolor="black")
     except AttributeError:
         pass
 
     try:
         ax[1].set_title("Git hours per day")
-        hbc = ax[1].bar(pd_dr, _df.git_hours, color="#0f52ba", width=0.6, edgecolor="black")
+        hbc = ax[1].bar(_df.index, _df.git_hours, color="#bf0a30", width=0.6, edgecolor="black")
     except AttributeError:
         pass
 
     try:
         ax[2].set_title("Pomodoros per day")
-        pbc = ax[1].bar(pd_dr, _df.minutes, color="#89cfef", width=0.6, edgecolor="black")
+        pbc = ax[2].bar(_df.index, _df.pomo_minutes, color="#89cfef", width=0.6, edgecolor="black")
     except AttributeError:
         pass
 
     try:
         ax[3].set_title("Super-productivity hours")
-        sbc = ax[3].bar(pd_dr, _df.super_hours, color="#fee12b", width=0.6, edgecolor="#3e424b")
+        sbc = ax[3].bar(_df.index, _df.super_hours, color="#fee12b", width=0.6, edgecolor="#3e424b")
+        sbc = ax[3].bar(_df.index, _df.web_hours, color="#ffd6ff", width=0.6, edgecolor="#3e424b")
     except AttributeError:
         pass
 
@@ -64,7 +51,6 @@ def plot_df(_df):
 
 
 def all_plot(all_projects_df):
-    all_projects_df = all_projects_df.replace(0.0, float('nan'))
     projects = load_projects()
 
     fig, axs = plt.subplots(len(projects),
@@ -84,8 +70,8 @@ def all_plot(all_projects_df):
 
         ax2 = ax.twinx()  # instantiate a second axes that shares the same x-axis
         ax2.set_ylim([-5, 30])
-        ax2.plot(g_df.index, g_df.interpolate(method="spline", order=3), color="red", lw=2, zorder=-4)
-        ax2.scatter(g_df.index, g_df, marker="*", zorder=3, color="lightgreen", edgecolor="black", lw=0.5, s=10)
+        ax2.plot(g_df.index, g_df.interpolate(method="spline", order=3), color="#bf0a30", lw=2, zorder=-4)
+        ax2.scatter(g_df.index, g_df, marker="*", zorder=3, color="lightgreen", edgecolor="black", lw=0.5, s=50)
 
         pbc = ax.bar(p_df.index, p_df, width=0.5, color='#89cfef', label='Pomodoro', edgecolor="black", linewidth=0.2)
         sbc = ax.bar(s_df.index, s_df, width=0.5, color='#fee12b', label='Super', edgecolor="black", linewidth=0.2)

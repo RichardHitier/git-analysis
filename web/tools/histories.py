@@ -308,7 +308,6 @@ def merge_all_histories(pomo_df, superprod_df, superweb_df):
 
     # Concatenate
     merged_df = pd.concat(all_df_list)
-    merged_df.fillna(0.0, inplace=True)
 
     # Global reindex
     merged_df.index = pd.to_datetime(merged_df.index)

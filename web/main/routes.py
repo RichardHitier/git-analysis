@@ -36,14 +36,10 @@ def sooner_or_later(request):
 
 @bp.route("/commits/<project_name>", methods=["GET"])
 def commits(project_name):
-    pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
-    superprod_file = load_config()["SUPERPROD_FILEPATH"]
     sooner_date, later_date = sooner_or_later(request)
-    hits_df = merge_histories(project_name, pomofocus_file, superprod_file)
+    all_df = get_cached_histories()
+    hits_df = all_df[all_df['project'] == project_name]
     hits_df = hits_df.truncate(before=sooner_date, after=later_date)
-    new_index = pd.date_range(start=sooner_date, end=later_date, freq='D')
-    hits_df = hits_df.reindex(new_index)
-    hits_df.fillna(0.0, inplace=True)
     hits_fig = plot_df(hits_df)
     buf = BytesIO()
     hits_fig.savefig(buf, format="png")
@@ -54,12 +50,6 @@ def commits(project_name):
 
 @bp.route("/projects")
 def projects():
-    pomofocus_file = load_config()["POMOFOCUS_FILEPATH"]
-    pom_df = pomofocus_to_df(pomofocus_file)
-    superprod_file = load_config()["SUPERPROD_FILEPATH"]
-    super_df = superprod_to_df(superprod_file)
-    webprod_file = load_config()["WEBPROD_FILEPATH"]
-    web_df = superprod_to_df(webprod_file)
 
     sooner_date, later_date = sooner_or_later(request)
 
