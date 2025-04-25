@@ -98,9 +98,15 @@ def all_plot(all_projects_df):
         ax.set_title(f"Project: {project_name}", y=1.1, pad=-25.0, loc="center")
         ax.set_ylabel("minutes")
         project_df = all_projects_df[all_projects_df['project'] == project_name]
+        g_df = project_df.git_commits
         p_df = project_df.pomo_minutes
         s_df = project_df.super_hours*60
         w_df = project_df.web_hours*60
+
+        ax2 = ax.twinx()  # instantiate a second axes that shares the same x-axis
+        ax2.set_ylim([-5, 30])
+        ax2.plot(g_df.index, g_df.interpolate(method="spline", order=3), color="red", lw=2, zorder=-4)
+        ax2.scatter(g_df.index, g_df, marker="*", zorder=3, color="lightgreen", edgecolor="black", lw=0.5, s=10)
 
         pbc = ax.bar(p_df.index, p_df, width=0.5, color='#89cfef', label='Pomodoro', edgecolor="black", linewidth=0.2)
         sbc = ax.bar(s_df.index, s_df, width=0.5, color='#fee12b', label='Super', edgecolor="black", linewidth=0.2)
