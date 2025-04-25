@@ -308,6 +308,9 @@ def merge_all_histories(pomo_df, superprod_df):
 
     # Global reindex
     merged_df.index = pd.to_datetime(merged_df.index)
+    columns = ['project', 'git_commits', 'git_hours', 'git_days', 'pomo_minutes',
+               'super_hours']
+    merged_df = merged_df[columns]
     return merged_df.sort_index()
 
 
@@ -343,7 +346,7 @@ if __name__ == "__main__":
     elif cli_arg == 'hours_bht':
         print(hours_per_day(project_to_df('bht')))
     elif cli_arg == 'merged_bht':
-        print(merge_histories('bht',pomofocus_file, superprod_file))
+        print(merge_histories('bht', pomofocus_file, superprod_file))
     elif cli_arg == 'merged_all':
         df = merge_all_histories(pomofocus_to_df(pomofocus_file), superprod_to_df(superprod_file))
         print(df.columns)
