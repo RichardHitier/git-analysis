@@ -23,8 +23,17 @@ pro:
   - pro
   - Pro
 perso:
-  git_dirs: []
   pom_project: PERSO
   superprod_projects:
   - perso
   - Perso
+  git_dirs:
+  - /home/richard/01DEV/visu-velo/.git
+  - /home/richard/01DEV/cpor/.git
+  - /home/richard/01DEV/compta-perso/.git
+  - /home/richard/01DEV/velocirap/.git
+  - /home/richard/01DEV/co-libri-config/.git
+  - /home/richard/01DEV/chevres/.git
+  - /home/richard/01DEV/projects-time-extractor/.git
+  - /home/richard/01DEV/www.co-libri.org/.git
+  - /home/richard/01DEV/journey2web/.git
