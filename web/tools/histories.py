@@ -42,7 +42,7 @@ def repo_to_df(project_git_dir):
     _df = pd.DataFrame(data, columns=["date", "day", "hour"])
 
     # create a new column with 1 (one) commit per timestamp row
-    _df["nb_commits"] = 1
+    _df["git_commits"] = 1
 
     return _df
 
@@ -79,7 +79,6 @@ def daily_commits(project_df):
 
     project_df = project_df.copy()
     project_df.index = project_df.day
-    # project_df.rename(columns={"nb_commits": "commits"}, inplace=True)
     project_df.drop(columns=["date", "hour", "day"], inplace=True)
     project_df.index = pd.to_datetime(project_df.index)
 
@@ -117,15 +116,15 @@ def hours_per_day(project_df):
 
     # day by day, get the duration, in hour (float) and day part (float)
     df_4["duration"] = df_4.apply(lambda x: x["max"] - x["min"], axis=1)
-    df_4["duration_hour"] = df_4.apply(lambda x: f"{x['duration'].seconds / 3600:.02f}", axis=1)
-    df_4["duration_day"] = df_4.apply(lambda x: f"{x['duration'].seconds / (3600 * 8):.03f}", axis=1)
-    df_5 = df_4[["duration_hour", "duration_day"]]
+    df_4["git_hours"] = df_4.apply(lambda x: f"{x['duration'].seconds / 3600:.02f}", axis=1)
+    df_4["git_days"] = df_4.apply(lambda x: f"{x['duration'].seconds / (3600 * 8):.03f}", axis=1)
+    df_5 = df_4[["git_hours", "git_days"]]
     # df_5["project"] = project_name
     df_5.index = pd.to_datetime(df_5.index)
     new_index = pd.date_range(start=df_5.index[0], end=df_5.index[-1])
     df_6 = df_5.reindex(new_index)
-    df_6["duration_hour"] = df_6["duration_hour"].apply(lambda x: float(x))
-    df_6["duration_day"] = df_6["duration_day"].apply(lambda x: float(x))
+    df_6["git_hours"] = df_6["git_hours"].apply(lambda x: float(x))
+    df_6["git_days"] = df_6["git_days"].apply(lambda x: float(x))
 
     return df_6
 

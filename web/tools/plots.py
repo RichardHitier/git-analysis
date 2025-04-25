@@ -30,13 +30,13 @@ def plot_df(_df):
 
     try:
         ax[0].set_title("Git Commits per day")
-        cbc = ax[0].bar(pd_dr, _df.nb_commits, color="#bf0a30", width=0.6, edgecolor="black")
+        cbc = ax[0].bar(pd_dr, _df.git_commits, color="#bf0a30", width=0.6, edgecolor="black")
     except AttributeError:
         pass
 
     try:
         ax[1].set_title("Git hours per day")
-        hbc = ax[1].bar(pd_dr, _df.duration_hour, color="#0f52ba", width=0.6, edgecolor="black")
+        hbc = ax[1].bar(pd_dr, _df.git_hours, color="#0f52ba", width=0.6, edgecolor="black")
     except AttributeError:
         pass
 
